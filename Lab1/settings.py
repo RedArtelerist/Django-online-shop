@@ -21,13 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = '0w%o8=4ol53zbn8!wz+$$3ipx(7j2(9#ur5+%w=vkq#l^-jhth'
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'cg#p$g+j9tax!#a3cup@1$8obt2_+&k3q+pmu)5%asj6yjpkag')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '0w%o8=4ol53zbn8!wz+$$3ipx(7j2(9#ur5+%w=vkq#l^-jhth')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['django-online-shop-lab1.herokuapp.com', '127.0.0.1']
 
 # Application definition
 
