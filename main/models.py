@@ -46,7 +46,6 @@ class Product(models.Model):
     name = models.CharField('Name', max_length=50, null=True)
     description = models.TextField('Description', max_length=3000, blank=True, null=True)
     specifications = models.TextField('Specifications', max_length=3000, null=True)
-    #price = models.FloatField('Price', default=0)
     price = models.DecimalField('Price', default=0, max_digits=10, decimal_places=2)
     discount = models.PositiveSmallIntegerField('Discount', default=0, null=True)
     year = models.PositiveSmallIntegerField('Year', default=2020)
