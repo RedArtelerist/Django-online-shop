@@ -25,6 +25,10 @@ SECRET_KEY = '0w%o8=4ol53zbn8!wz+$$3ipx(7j2(9#ur5+%w=vkq#l^-jhth'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+<<<<<<< HEAD
+=======
+#DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+>>>>>>> 91c52e0858d8a9211f7eb10db9107e70366236a8
 
 #DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
@@ -127,5 +131,9 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 
+<<<<<<< HEAD
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
 
+=======
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+>>>>>>> 91c52e0858d8a9211f7eb10db9107e70366236a8
