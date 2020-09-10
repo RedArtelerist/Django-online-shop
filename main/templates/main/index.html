@@ -1,9 +1,24 @@
 {% extends 'main/base.html' %}
+{% load static %}
+
 {% block title %}
 {{ title }}
 {% endblock %}
 
-{% block content %}
+{% block css_link %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
 
+<style>
+    body{
+        width: 100%;
+        background-image: url("{% static 'media/background.jpg' %}");
+        background-repeat: no-repeat;
+    }
+</style>
 {% endblock %}
 
+{% block content %}
+    <div class="container">
+      <a href="{% url 'store' %}" class="btn my-btn">Go to Store</a>
+    </div>
+{% endblock %}

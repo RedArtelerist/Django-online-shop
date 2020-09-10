@@ -25,9 +25,12 @@ SECRET_KEY = '0w%o8=4ol53zbn8!wz+$$3ipx(7j2(9#ur5+%w=vkq#l^-jhth'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
 #DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = ['django-online-shop-lab1.herokuapp.com', '127.0.0.1']
+#DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -43,7 +46,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -126,5 +128,7 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
