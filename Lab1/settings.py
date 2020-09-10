@@ -30,6 +30,9 @@ DEBUG = True
 
 #DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
+
+#DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -132,3 +135,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+
