@@ -1,0 +1,74 @@
+.input-requirements {
+    font-size: 1.3rem;
+    font-style: italic;
+    text-align: left;
+    list-style: disc;
+    list-style-position: inside;
+    max-width: 400px;
+    margin: 10px auto;
+    color: rgb(150,150,150);
+}
+
+
+    .input-requirements li.invalid {
+        color: #e74c3c;
+    }
+
+    .input-requirements li.valid {
+        color: #2ecc71;
+    }
+
+        .input-requirements li.valid:after {
+            display: inline-block;
+            padding-left: 10px;
+            content: "\2713";
+        }
+input[class="form-control"]:not([type="submit"]):valid {
+    border-color: #2ecc71;
+}
+
+input[class="form-control"]:not([type="submit"]):invalid {
+    border-color: red;
+}
+
+
+    /* Hide and show related .input-requirements when interacting with input */
+
+input[class="form-control"]:not([type="submit"]) + .input-requirements {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 1s ease-out;
+}
+
+input[class="form-control"]:not([type="submit"]):hover + .input-requirements,
+input[class="form-control"]:not([type="submit"]):focus + .input-requirements,
+input[class="form-control"]:not([type="submit"]):active + .input-requirements {
+    max-height: 1000px; /* any large number (bigger then the .input-requirements list) */
+    transition: max-height 1s ease-in;
+}
+
+.invalid input:required:invalid {
+    background: #BE4C54;
+}
+
+.invalid input:required:valid {
+    background: #17D654;
+}
+
+.form-group{
+    position: relative;
+    display: inline-block;
+}
+
+.input-requirements{
+    position: absolute;
+    font-size: 10px;
+    margin-top: -20px;
+    margin-left: -30px;
+    display: none;
+}
+
+.form-group.email{
+    position: absolute;
+    margin-top: 0;
+}

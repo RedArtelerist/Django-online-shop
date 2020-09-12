@@ -1,0 +1,67 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block content %}
+<br>
+<div>
+    <h1 align="center">Products</h1>
+</div>
+
+<br>
+<a class="btn btn-primary btn btn-block btn-lg " href="{% url 'create_product' %}">Create product</a>
+    <div class="col-sm">
+        <table class = "table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Image</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Specification</th>
+                    <th scope="col">Discount</th>
+                    <th scope="col">Year</th>
+                    <th scope="col">Active</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Company</th>
+                    <th scope="col">Digital</th>
+                    <th scope="col">Change</th>
+                    <th scope="col">Remove</th>
+                </tr>
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td><img src="{{product.imageURL}}" height="50" weight="50"> </td>
+                            <td>{{product.name}}</td>
+                            <td>{{product.price}}</td>
+                            <td>{{product.description}}</td>
+                            <td>{{product.specifications}}</td>
+                            <td>{{product.discount}}%</td>
+                            <td>{{product.year}}</td>
+                            <td>
+                                {% if product.isActive == True %}
+                                <img src="../static/media/icons/check.png" height="25" weight="25">
+                                {% else %}
+                                <img src="../static/media/icons/cross.png" height="20" weight="20">
+                                {% endif %}
+                            </td>
+                            <td>{{product.category}}</td>
+                            <td>{{product.company}}</td>
+                            <td>
+                                {% if product.digital == True %}
+                                <img src="../static/media/icons/check.png" height="25" weight="25">
+                                {% else %}
+                                <img src="../static/media/icons/cross.png" height="20" weight="20">
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a class="btn btn-warning" href="{% url 'update_product' product.id %}">Change</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-danger" href="{% url 'delete_product' product.id %}">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor%}
+                </tbody>
+            </thead>
+        </table>
+    </div>
+{% endblock %}

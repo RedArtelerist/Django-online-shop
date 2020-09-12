@@ -28,10 +28,6 @@ DEBUG = True
 
 #DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-#DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
-
-
-#DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 ALLOWED_HOSTS = ['*']
 
@@ -44,8 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
     'main'
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

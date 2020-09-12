@@ -1,0 +1,42 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block css_link %}
+{% endblock%}
+
+
+{% block content %}
+
+    <div class="container">
+        <div class="col-md-10 offset-md-1 mt-5">
+            <div class="jumbotron">
+                <h1 class="display-4">Company Register</h1>
+                <hr class="my-4">
+                <form action="" method="post" autocomplete="off">
+
+                    {% csrf_token %}
+                    {{form.name|as_crispy_field}}
+                    {{form.country|as_crispy_field}}
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-success btn-block btn-lg"><i class="fas fa-database"></i>Submit</button>
+                        </div>
+
+                        <div class="col-md-4">
+                            <a href="{% url 'company_list' %}" class="btn btn-secondary btn-block btn-lg">
+                                <i class="fas fa-stream"></i> Back to list
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock%}

@@ -17,11 +17,11 @@
     text-transform: uppercase;
 }
 
-.btn:hover {
+.btn.my-btn:hover {
     box-shadow: 1px 1px 25px 10px rgba(146, 148, 248, 0.4);
 }
 
-.btn:before {
+.btn.my-btn:before {
     content: "";
     position: absolute;
     top: 0;
@@ -37,6 +37,6 @@
     transition: all 650ms;
 }
 
-.btn:hover:before {
+.btn.my-btn:hover:before {
     left: 100%;
 }

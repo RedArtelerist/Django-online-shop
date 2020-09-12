@@ -5,7 +5,15 @@
 {% endblock %}
 
 {% block css_link %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+
+
     <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/checkout_validation.css' %}">
+
 {% endblock%}
 
 {% block content %}
@@ -14,34 +22,147 @@
 		<div class="col-lg-6">
 			<div class="box-element" id="form-wrapper">
 				<form id="form">
-					<div id="user-info">
-						<div class="form-field">
-							<input required class="form-control" type="text" name="name" placeholder="Name..">
-						</div>
-						<div class="form-field">
-							<input required class="form-control" type="email" name="email" placeholder="Email..">
-						</div>
+
+                    <div id="user-info">
+                        <div class="form-group">
+                            <label for="userName">
+                                <div class="form-field">
+                                    <div class="input-group mb-3">
+                                         <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">Name</span>
+                                         </div>
+                                    <input id="userName" required class="form-control" type="text" name="userName" placeholder="Name.." maxlength="20" minlength="5">
+                                     </div>
+                                </div>
+
+                               <ul class="input-requirements">
+                                    <li>Required</li>
+                                    <li>At least 5 characters long, at maximum 20</li>
+                                    <li>Must only contain letters and digits</li>
+                               </ul>
+                            </label>
+                        </div>
+
+                        <div class="form-group email">
+                            <label for="email">
+                                <div class="form-field">
+                                    <div class="input-group mb-3">
+                                         <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">Email</span>
+                                         </div>
+                                        <input id="email" required class="form-control" type="email" name="email" placeholder="Email..">
+                                     </div>
+                                </div>
+                            </label>
+                        </div>
 					</div>
 
 					<div id="shipping-info">
 						<hr>
 						<p>Shipping Information:</p>
 						<hr>
-						<div class="form-field">
-							<input class="form-control" type="text" name="country" placeholder="Country.." required>
-						</div>
-						<div class="form-field">
-							<input class="form-control" type="text" name="state" placeholder="State.." required>
-						</div>
-						<div class="form-field">
-							<input class="form-control" type="text" name="city" placeholder="City.." required>
-						</div>
-						<div class="form-field">
-							<input class="form-control" type="text" name="address" placeholder="Address.." required>
-						</div>
-						<div class="form-field">
-							<input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
-						</div>
+
+
+                        <div class="form-group">
+
+                            <label for="country">
+
+                                <div class="form-field">
+                                    <div class="input-group mb-3">
+                                         <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">Country</span>
+                                         </div>
+                                    <input id="country" class="form-control" type="text" name="country" placeholder="Country.." maxlength="30" minlength="3" required>
+                                     </div>
+                                </div>
+
+                                <ul class="input-requirements">
+                                    <li>Required</li>
+                                    <li>At least 3 characters long, at maximum 30</li>
+                                    <li>Must only contain letters(no special characters)</li>
+                               </ul>
+
+                            </label>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="state">
+                                <div class="form-field">
+                                    <div class="input-group mb-3">
+                                         <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">State</span>
+                                         </div>
+                                        <input id="state" class="form-control" type="text" name="state" placeholder="State.." maxlength="30" minlength="3" required>
+                                     </div>
+                                </div>
+
+                                <ul class="input-requirements">
+                                    <li>Required</li>
+                                    <li>At least 3 characters long, at maximum 30</li>
+                                    <li>Must only contain letters(no special characters)</li>
+                               </ul>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city">
+
+                                <div class="form-field">
+                                     <div class="input-group mb-3">
+                                         <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">City</span>
+                                         </div>
+                                         <input id="city" class="form-control" type="text" name="city" placeholder="City.." maxlength="30" minlength="3" required>
+                                     </div>
+                                </div>
+
+                                <ul class="input-requirements">
+                                    <li>Required</li>
+                                    <li>At least 3 characters long, at maximum 30</li>
+                                    <li>Must only contain letters(no special characters)</li>
+                               </ul>
+                            </label>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="address">
+                                <div class="form-field">
+                                    <div class="input-group mb-3">
+                                         <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">Address</span>
+                                         </div>
+                                        <input id="address" class="form-control" type="text" name="address" placeholder="Address.." maxlength="50" minlength="3" required>
+                                     </div>
+                                </div>
+
+                                <ul class="input-requirements">
+                                    <li>Required</li>
+                                    <li>At least 3 characters long, at maximum 50</li>
+                                    <li>Must only contain letters and digits</li>
+                               </ul>
+                            </label>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="zipcode">
+                                <div class="form-field">
+                                    <div class="input-group mb-3">
+                                         <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">Zipcode</span>
+                                         </div>
+                                        <input id="zipcode" class="form-control" type="text" name="zipcode" placeholder="Zip code.." required>
+                                     </div>
+                                </div>
+
+                                <ul class="input-requirements">
+                                    <li>Required</li>
+                                    <li>Must contain 5 digits</li>
+                               </ul>
+                            </label>
+                        </div>
 
 					</div>
 
@@ -78,7 +199,9 @@
 			</div>
 		</div>
 	</div>
+
 </div>
+
 
 <script type="text/javascript">
 	var shipping = '{{order.shipping}}'
@@ -102,6 +225,9 @@
 		e.preventDefault()
 		console.log('Form Submitted...')
 		document.getElementById('form-button').classList.add('hidden')
+        document.querySelectorAll('form input')
+            .forEach(elem => elem.setAttribute("disabled", "disabled"));
+		document.querySelectorAll('form ul').forEach(elem => elem.setAttribute('hidden', 'hidden'))
 		document.getElementById('payment-info').classList.remove('hidden')
 	})
 
@@ -138,7 +264,7 @@
 	    	}
 
 	    	if (user == 'AnonymousUser'){
-	    		userFormData.name = form.name.value
+	    		userFormData.name = form.userName.value
 	    		userFormData.email = form.email.value
 	    	}
 
@@ -170,4 +296,22 @@
 	    }
 
 </script>
+
+<script>
+
+     $(".form-field input").focusin(function() {
+        $(this).parent().parent().next(".input-requirements").css( "display", "block" );
+        $(this).focused = true;
+    });
+
+
+    $( ".form-field input").focusout(function() {
+        $(this).parent().parent().next(".input-requirements").css( "display", "none" );
+        $(this).focused = false;
+    });
+</script>
+
+
+<script type="text/javascript" src="{% static 'js/checkout.js' %}"></script>
+
 {% endblock content %}
