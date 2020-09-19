@@ -45,7 +45,8 @@ def product(request, product_id):
     cartItems = cookieData['cartItems']
 
     product = Product.objects.get(id=product_id)
-    return render(request, 'main/product.html', {'title': product.name, 'product': product, 'cartItems': cartItems})
+    productImages = product.imageitem_set.all()
+    return render(request, 'main/product.html', {'title': product.name, 'product': product, 'productImages': productImages, 'cartItems': cartItems})
 
 
 def cart(request):
@@ -129,7 +130,6 @@ def processOrder(request):
             city=data['shipping']['city'],
             zipcode=data['shipping']['zipcode'],
         )
-
     return JsonResponse('Payment complete!', safe=False)
 
 

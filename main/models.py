@@ -5,16 +5,17 @@ from django.contrib.auth.models import User
 import decimal
 import datetime
 
+
 # Create your models here.
 
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField('Name', max_length=100, null=True, unique=True, validators=[RegexValidator(
-            regex='^[a-zA-Z0-9\s_-]*$',
-            message='User name must be Alphanumerical',
-            code='invalid_username'
-        ), ])
+        regex='^[a-zA-Z0-9\s_-]*$',
+        message='User name must be Alphanumerical',
+        code='invalid_username'
+    ), ])
     email = models.EmailField('Email', max_length=100, null=True, unique=True)
 
     def __str__(self):
@@ -27,10 +28,10 @@ class Customer(models.Model):
 
 class Category(models.Model):
     name = models.CharField('Name', max_length=20, unique=True, validators=[RegexValidator(
-            regex='^[a-zA-Z\s_-]*$',
-            message='Category must be Alphabetic',
-            code='invalid_categoryname'
-        ), ])
+        regex='^[a-zA-Z\s_-]*$',
+        message='Category must be Alphabetic',
+        code='invalid_categoryname'
+    ), ])
 
     def __str__(self):
         return self.name
@@ -42,15 +43,15 @@ class Category(models.Model):
 
 class Company(models.Model):
     name = models.CharField('Name', max_length=20, unique=True, validators=[RegexValidator(
-            regex='^[a-zA-Z\s_-]*$',
-            message='Company name must be Alphabetic',
-            code='invalid_companytname'
-        ), ])
+        regex='^[a-zA-Z\s_-]*$',
+        message='Company name must be Alphabetic',
+        code='invalid_companytname'
+    ), ])
     country = models.CharField('Country', max_length=15, validators=[RegexValidator(
-            regex='^[a-zA-Z\s_-]*$',
-            message='Country must be Alphabetic',
-            code='invalid_countryname'
-        ), ])
+        regex='^[a-zA-Z\s_-]*$',
+        message='Country must be Alphabetic',
+        code='invalid_countryname'
+    ), ])
 
     def __str__(self):
         return self.name
@@ -63,15 +64,17 @@ class Company(models.Model):
 class Product(models.Model):
     image = models.ImageField(null=True, blank=True, default='placeholder.png')
     name = models.CharField('Name', max_length=50, null=True, unique=True, validators=[RegexValidator(
-            regex='^[a-zA-Z\s0-9._-]*$',
-            message='Product name must be Alphabetic',
-            code='invalid_productname'
-        ), ])
+        regex='^[a-zA-Z0-9/\s)(._-]*$',
+        message='Product name must be Alphabetic',
+        code='invalid_productname'
+    ), ])
     description = models.TextField('Description', max_length=3000, blank=True, null=True)
+    shortSpecifications = models.TextField('Short specifications', max_length=500, null=True)
     specifications = models.TextField('Specifications', max_length=3000, null=True)
     price = models.DecimalField('Price', default=0, max_digits=10, decimal_places=2, validators=[validate_price])
     discount = models.PositiveSmallIntegerField('Discount', default=0, null=True, validators=[validate_discount])
-    year = models.PositiveSmallIntegerField('Year', default=datetime.datetime.now().year, validators=[validate_product_year])
+    year = models.PositiveSmallIntegerField('Year', default=datetime.datetime.now().year,
+                                            validators=[validate_product_year])
     digital = models.BooleanField(default=False, null=True, blank=False)
     isActive = models.BooleanField(default=True)
     category = models.ForeignKey(Category, verbose_name="Category", on_delete=models.CASCADE)
@@ -95,6 +98,27 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Product'
         verbose_name_plural = 'Products'
+
+
+class ImageItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    image = models.ImageField(null=True, blank=True, default='placeholder.png')
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url = 'media/placeholder.png'
+        return url
+
+    class Meta:
+        verbose_name = 'Image'
+        verbose_name_plural = 'Product Gallery'
 
 
 class Order(models.Model):
@@ -124,7 +148,7 @@ class Order(models.Model):
         orderItems = self.orderitem_set.all()
 
         for item in orderItems:
-            if item.product.digital == False:
+            if not item.product.digital:
                 shipping = True
         return shipping
 
@@ -148,30 +172,30 @@ class ShippingAddress(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, blank=True, null=True)
     country = models.CharField('Country', max_length=30, null=True, validators=[RegexValidator(
-            regex='^[a-zA-Z\s_-]*$',
-            message='Country must be Alphabetic',
-            code='invalid_countryname'
-        ), ])
+        regex='^[a-zA-Z\s_-]*$',
+        message='Country must be Alphabetic',
+        code='invalid_countryname'
+    ), ])
     city = models.CharField('City', max_length=30, null=True, validators=[RegexValidator(
-            regex='^[a-zA-Z\s_-]*$',
-            message='City must be Alphabetic',
-            code='invalid_cityname'
-        ), ])
+        regex='^[a-zA-Z\s_-]*$',
+        message='City must be Alphabetic',
+        code='invalid_cityname'
+    ), ])
     state = models.CharField('State', max_length=30, null=True, validators=[RegexValidator(
-            regex='^[a-zA-Z\s_-]*$',
-            message='State must be Alphabetic',
-            code='invalid_statename'
-        ), ])
+        regex='^[a-zA-Z\s_-]*$',
+        message='State must be Alphabetic',
+        code='invalid_statename'
+    ), ])
     address = models.CharField('Address', max_length=200, null=True, validators=[RegexValidator(
-            regex='^[a-zA-Z0-9/\\s_-]*$',
-            message='Address must be Alphanumerical',
-            code='invalid_addressname'
-        ), ])
+        regex='^[a-zA-Z0-9/\\s_-]*$',
+        message='Address must be Alphanumerical',
+        code='invalid_addressname'
+    ), ])
     zipcode = models.CharField('Zipcode', max_length=10, null=True, validators=[RegexValidator(
-            regex='(^\d{5}$)|(^\d{5}-\d{4}$)',
-            message='Zipcode must contains 5 digits',
-            code='invalid_zipcodename'
-        ), ])
+        regex='(^\d{5}$)|(^\d{5}-\d{4}$)',
+        message='Zipcode must contains 5 digits',
+        code='invalid_zipcodename'
+    ), ])
     data_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

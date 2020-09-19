@@ -25,11 +25,3 @@ def validate_product_year(value):
             _('%(value)s is not correct year'),
             params={'value': value},
         )
-
-
-def validate_string(value):
-    if value > 100:
-        raise ValidationError(
-            _('%(value)s is not correct discount'),
-            params={'value': value},
-        )

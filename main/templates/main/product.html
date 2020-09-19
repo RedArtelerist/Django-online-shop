@@ -11,66 +11,109 @@
 
 {% block content %}
     <div class="back-store"><a class="btn btn-outline-dark" href="{% url 'store' %}">&#x2190; Back to Store</a></div>
-    <div class="container product-item">
-        <div class="row">
-            <div class="col-lg-4 item">
-                <div class="product-image-item">
-                    <img class="img-responsive" src="{{ product.imageURL }}">
-                </div>
 
-                {% if product.discount %}
-                  <span class="discount">-{{ product.discount }}%</span>
-                {% endif %}
+    <div id="content-wrapper">
+        <div class="column item">
 
+            <div class="product-image-item">
+                <img id="featured" class="img-responsive" src="{{ product.imageURL }}">
             </div>
-            <div class="col-lg-8 info">
-                <h1 class="text-center">
-                    {{ product.name }}
-                </h1>
-                <div class="price">
-                    <p style="font-weight: bold; font-size: 1.5em;">Price:</p>
-                    {% if product.discount %}
-                        <p class="product-price" style="text-decoration: line-through; opacity: .7;">${{ product.price|floatformat:2}}</p>
-                        <p class="product-discount-price">${{ product.discount_price|floatformat:2 }}</p>
-                    {% else %}
-                        <p class="product-price" style="font-weight: 500;">${{ product.price|floatformat:2}}</p>
-                    {% endif %}
-                    <button data-product="{{product.id}}" data-action="add" class="button update-cart">Buy</button>
+
+            {% if product.discount %}
+                <span class="discount">-{{ product.discount }}%</span>
+            {% endif %}
+
+            {% if productImages %}
+                <div id="slide-wrapper">
+                    <img id="slideLeft" class="arrow" src="{% static 'media/icons/arrow-left.png' %}">
+                    <div id="slider">
+                        <img class="thumbnail" src="{{ product.imageURL }}">
+                        {% for image in productImages%}
+                            <img class="thumbnail" src="{{image.imageURL}}">
+                        {% endfor %}
+                    </div>
+                    <img id="slideRight" class="arrow" src="{% static 'media/icons//arrow-right.png' %}">
                 </div>
-                <div>
-                      <!-- Nav tabs -->
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#description">Description</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#specifications">Specifications</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#reviews">Reviews</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content p-3">
-                        <div class="tab-pane active" id="description">
-                            <h2 class="h4 mb-3">Product description</h2>
-                            <p>{{ product.description }}</p>
-                        </div>
-                        <div class="tab-pane" id="specifications">
-                            <h2 class="h4 mb-3">Product specifications</h2>
-                            <p>{{ product.specifications }}</p>
-                        </div>
-                        <div class="tab-pane" id="reviews">
-                            <h2 class="h4 mb-3">Reviews</h2>
-                        </div>
+            {% else %}
+            {% endif %}
+        </div>
+        <div class="column info">
+            <h1 class="text-center">
+                {{ product.name }}
+            </h1>
+            <div class="price">
+                <p style="font-weight: bold; font-size: 1.5em;">Price:</p>
+                {% if product.discount %}
+                    <p class="product-price" style="text-decoration: line-through; opacity: .7;">${{ product.price|floatformat:2}}</p>
+                    <p class="product-discount-price">${{ product.discount_price|floatformat:2 }}</p>
+                {% else %}
+                    <p class="product-price" style="font-weight: 500;">${{ product.price|floatformat:2}}</p>
+                {% endif %}
+                <button data-product="{{product.id}}" data-action="add" class="button update-cart">Buy</button>
+            </div>
+            <div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#description">Description</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#specifications">Specifications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#reviews">Reviews</a>
+                    </li>
+                </ul>
+                <div class="tab-content p-3">
+                    <div class="tab-pane active" id="description">
+                        <h2 class="h4 mb-3">Product description</h2>
+                        <p>{{ product.description|safe }}</p>
+                    </div>
+                    <div class="tab-pane" id="specifications">
+                        <h2 class="h4 mb-3">Product specifications</h2>
+                        <p>{{ product.specifications|safe }}</p>
+                    </div>
+                    <div class="tab-pane" id="reviews">
+                        <h2 class="h4 mb-3">Reviews</h2>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
 
 <script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+			let thumbnails = document.getElementsByClassName('thumbnail')
+			let activeImages = document.getElementsByClassName('active')
+			for (var i=0; i < thumbnails.length; i++){
+				thumbnails[i].addEventListener('mouseover', function(){
+
+					if (activeImages.length > 0){
+						activeImages[0].classList.remove('active')
+					}
+
+					this.classList.add('active')
+					document.getElementById('featured').src = this.src
+				})
+
+			}
+
+			const buttonRight = document.getElementById('slideRight');
+			const buttonLeft = document.getElementById('slideLeft');
+
+
+			buttonRight.addEventListener('click', function(){
+				document.getElementById('slider').scrollLeft += 180;
+		    })
+
+		    buttonLeft.addEventListener('click', function(){
+		      document.getElementById('slider').scrollLeft -= 180;
+		    })
+
+	</script>
 {% endblock %}
 
 

@@ -1,3 +1,4 @@
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
 from .models import *
 
@@ -32,15 +33,16 @@ class CompanyForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'price', 'digital', 'image', 'description', 'specifications', 'discount', 'year', 'isActive',
-                  'category', 'company']
+        fields = ['name', 'price', 'digital', 'image', 'description', 'shortSpecifications', 'specifications',
+                  'discount', 'year', 'isActive', 'category', 'company']
         labels = {
             'name': 'Product Name',
             'price': 'Price',
             'digital': 'Digital',
             'image': 'Load image',
             'description': 'Description',
-            'specifications': 'Specification',
+            'specifications': 'Specifications',
+            'shortSpecifications': 'Short specifications',
             'discount': 'Discount',
             'year': 'Year',
             'isActive': 'Active',
@@ -49,6 +51,6 @@ class ProductForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(ProductForm,self).__init__(*args, **kwargs)
-        self.fields['category'].empty_label="Select"
-        self.fields['company'].empty_label="Select"
+        super(ProductForm, self).__init__(*args, **kwargs)
+        self.fields['category'].empty_label = "Select"
+        self.fields['company'].empty_label = "Select"

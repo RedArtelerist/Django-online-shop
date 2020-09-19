@@ -73,3 +73,18 @@
 	opacity: .6;
 }
 
+.img-fluid {
+	position: relative;
+    max-width: 100%;
+	left: 25%;
+    height: auto;
+    opacity: 1;
+    transition: transform .5s;
+	vertical-align: middle;
+	justify-content: center;
+    border-style: none;
+}
+.img-fluid:hover{
+	 transform: scale(1.1);
+}
+
