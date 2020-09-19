@@ -17,6 +17,7 @@ class ProductAdminForm(forms.ModelForm):
 
 # Register your models here.
 
+
 admin.site.register(Category)
 
 
