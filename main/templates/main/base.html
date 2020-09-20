@@ -78,18 +78,25 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'about' %}">About</a>
                     </li>
+                    {% if request.user.is_authenticated %}
+                        <li class="dropdown show">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tables</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="{% url 'category_list' %}">Categories</a>
+                                    <a class="dropdown-item" href="{% url 'company_list' %}">Companies</a>
+                                    <a class="dropdown-item" href="{% url 'products_table' %}">Products</a>
+                                </div>
+                        </li>
 
-                    <li class="dropdown show">
-                        {% if request.user.is_authenticated %}
-                            <a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tables</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <a class="dropdown-item" href="{% url 'category_list' %}">Categories</a>
-                                <a class="dropdown-item" href="{% url 'company_list' %}">Companies</a>
-                                <a class="dropdown-item" href="{% url 'products_table' %}">Products</a>
-                            </div>
-                        {% endif %}
-                    </li>
-
+                        <li class="dropdown show" style="margin-left: 5px">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownJsonApi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">JsonApi</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdownJsonApi">
+                                    <a class="dropdown-item" href="{% url 'category-list' %}">Categories</a>
+                                    <a class="dropdown-item" href="{% url 'company-list' %}">Companies</a>
+                                    <a class="dropdown-item" href="#">Products</a>
+                                </div>
+                        </li>
+                    {% endif %}
                 </ul>
 
                 <div class="box">

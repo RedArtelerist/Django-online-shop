@@ -27,5 +27,15 @@ urlpatterns = [
     path('update_product/<str:pk>', views.update_product, name="update_product"),
     path('delete_product/<str:pk>', views.delete_product, name="delete_product"),
 
+    path('category-list/', views.categoryList, name='category-list'),
+    path('category-detail/<str:pk>/', views.categoryDetail, name='category-detail'),
+    path('category-create/', views.categoryCreate, name='category-create'),
+    path('category-update/<str:pk>/', views.categoryUpdate, name='category-update'),
+    path('category-delete/<str:pk>/', views.categoryDelete, name='category-delete'),
 
+    path('company-list/', views.companyList, name='company-list'),
+    path('company-detail/<str:pk>/', views.companyDetail, name='company-detail'),
+    path('company-create/', views.companyCreate, name='company-create'),
+    path('company-update/<str:pk>/', views.companyUpdate, name='company-update'),
+    path('company-delete/<str:pk>/', views.companyDelete, name='company-delete'),
 ]
