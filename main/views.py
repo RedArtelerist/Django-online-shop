@@ -6,11 +6,25 @@ from rest_framework.exceptions import MethodNotAllowed, APIException
 from rest_framework.response import Response
 import json
 import datetime
+
+
 from .decorators import unauthenticated_user, allowed_users
 
 from .models import *
 from .utils import *
 from .forms import *
+
+
+from django.utils.baseconv import base64
+from base64 import b64encode
+from json import dumps
+from rest_framework.exceptions import APIException
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+from rest_framework import generics
+from rest_framework.views import APIView
+
 from .serializers import *
 
 # Create your views here.
@@ -276,6 +290,71 @@ def delete_product(request, pk):
     return render(request, 'main/product_crud/delete_product.html', context)
 
 
+#json API Products
+@api_view(['GET'])
+def apiOverview(request):
+    api_urls = {
+        'ProductList': '/product-list/',
+        'DetailViewProduct': '/product-detail/<str:pk>/',
+        'CreateProduct': '/product-create/',
+        'UpdateProduct': '/product-update/<str:pk>/',
+        'DeleteProduct': '/product-delete/<str:pk>/',
+    }
+    return Response(api_urls)
+
+
+@api_view(['GET'])
+def ProductList(request):
+    products = Product.objects.all()
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def ProductDetail(request, pk):
+    try:
+        product = Product.objects.get(id=pk)
+        serializer = ProductSerializer(product, many=False)
+        return Response(serializer.data)
+    except:
+        return Response(status=404)
+
+
+@api_view(['POST'])
+def ProductCreate(request):
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(status=505)
+
+
+@api_view(['PUT'])
+def ProductUpdate(request, pk):
+        product = Product.objects.get(id=pk)
+        serializer = ProductSerializer(instance=product, data=request.data, many=False, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            serializer.data['image'] = "pidor"
+            #print(serializer.errors)
+            print(serializer.data['image'])
+            return Response(status=505)
+
+
+@api_view(['DELETE'])
+def ProductDelete(request, pk, ):
+    try:
+        product = Product.objects.get(id=pk)
+        product.delete()
+        return Response("OK!")
+    except:
+        raise APIException("Error!")
+
+
+=======
 # JSON API for Category
 
 @allowed_users(allowed_roles=['admin'])
