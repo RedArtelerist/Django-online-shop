@@ -31,12 +31,25 @@ urlpatterns = [
     path('update_product/<str:pk>', views.update_product, name="update_product"),
     path('delete_product/<str:pk>', views.delete_product, name="delete_product"),
 
-    #json
+    #json urls products
     path('api/', views.apiOverview, name="api-overview"),
     path('product-list/', views.ProductList, name="product-list"),
     path('product-detail/<str:pk>/', views.ProductDetail, name="product-detail"),
     path('product-create/', views.ProductCreate, name="product-create"),
     path('product-update/<str:pk>/', views.ProductUpdate, name="product-update"),
     path('product-delete/<str:pk>/', views.ProductDelete, name="product-delete"),
+    
+    #json urls category
+    path('category-list/', views.categoryList, name='category-list'),
+    path('category-detail/<str:pk>/', views.categoryDetail, name='category-detail'),
+    path('category-create/', views.categoryCreate, name='category-create'),
+    path('category-update/<str:pk>/', views.categoryUpdate, name='category-update'),
+    path('category-delete/<str:pk>/', views.categoryDelete, name='category-delete'),
 
+    #json urls companies
+    path('company-list/', views.companyList, name='company-list'),
+    path('company-detail/<str:pk>/', views.companyDetail, name='company-detail'),
+    path('company-create/', views.companyCreate, name='company-create'),
+    path('company-update/<str:pk>/', views.companyUpdate, name='company-update'),
+    path('company-delete/<str:pk>/', views.companyDelete, name='company-delete'),
 ]

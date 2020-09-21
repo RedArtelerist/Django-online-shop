@@ -43,10 +43,10 @@ INSTALLED_APPS = [
     'crispy_forms',
     'ckeditor',
     'ckeditor_uploader',
-    'main',
-
+  
     'rest_framework',
-]
+    'main'
+
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

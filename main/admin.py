@@ -39,7 +39,7 @@ class ImagesInline(admin.TabularInline):
     readonly_fields = ('get_image',)
 
     def get_image(self, obj):
-        return mark_safe(f'<img src={obj.image.url} width="100" height="auto"')
+        return mark_safe(f'<img src={obj.image.url} width="100" style="max-height: 250px"')
 
     get_image.short_description = 'Image'
 
@@ -73,7 +73,7 @@ class ProductAdmin(admin.ModelAdmin):
     )
 
     def get_image(self, obj):
-        return mark_safe(f'<img src={obj.image.url} width="100" height="auto"')
+        return mark_safe(f'<img src={obj.image.url} width="100" style="max-height: 250px"')
 
     get_image.short_description = 'Image'
 
@@ -97,7 +97,7 @@ class OrderItemAdmin(admin.ModelAdmin):
     fields = ('product', 'order', 'quantity')
 
     def get_image(self, obj):
-        return mark_safe(f'<img src={obj.product.image.url} width="100" height="auto"')
+        return mark_safe(f'<img src={obj.product.image.url} width="100" style="max-height: 250px"')
 
     def get_total_price(self, obj):
         return f"{obj.get_total:.{2}f}"
@@ -133,7 +133,8 @@ class ImageItemAdmin(admin.ModelAdmin):
     readonly_fields = ('get_image',)
 
     def get_image(self, obj):
-        return mark_safe(f'<img src={obj.image.url} width="100" height="auto"')
+        return mark_safe(f'<img src={obj.image.url} width="100" style="max-height: 250px""')
+
 
     get_image.short_description = 'Image'
 
