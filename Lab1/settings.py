@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'rest_framework',
+    'corsheaders',
     'main'
 ]
 
@@ -51,6 +52,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -202,5 +204,9 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000"
+]
 
 

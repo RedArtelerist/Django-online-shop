@@ -278,15 +278,15 @@ def delete_product(request, pk):
 
 # JSON API for Category
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def categoryList(request):
-    categories = Category.objects.all()
+    categories = Category.objects.order_by('-id')
     serializer = CategorySerializer(categories, many=True)
     return Response(serializer.data)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def categoryDetail(request, pk):
     try:
@@ -297,7 +297,7 @@ def categoryDetail(request, pk):
         raise APIException("Detail Error")
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['POST'])
 def categoryCreate(request):
     serializer = CategorySerializer(data=request.data)
@@ -310,7 +310,7 @@ def categoryCreate(request):
     return Response(serializer.data)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['PUT'])
 def categoryUpdate(request, pk):
 
@@ -328,7 +328,7 @@ def categoryUpdate(request, pk):
         raise APIException("Update Error")
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['DELETE'])
 def categoryDelete(request, pk):
     try:
@@ -341,15 +341,15 @@ def categoryDelete(request, pk):
 
 # JSON API for Company
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def companyList(request):
-    companies = Company.objects.all()
+    companies = Company.objects.order_by('-id')
     serializer = CompanySerializer(companies, many=True)
     return Response(serializer.data)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def companyDetail(request, pk):
     try:
@@ -360,7 +360,7 @@ def companyDetail(request, pk):
         raise APIException("Detail Error")
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['POST'])
 def companyCreate(request):
     serializer = CompanySerializer(data=request.data)
@@ -373,7 +373,7 @@ def companyCreate(request):
     return Response(serializer.data)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['PUT'])
 def companyUpdate(request, pk):
     try:
@@ -390,7 +390,7 @@ def companyUpdate(request, pk):
         raise APIException("Update Error")
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['DELETE'])
 def companyDelete(request, pk):
     try:
