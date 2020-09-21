@@ -40,14 +40,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'ckeditor',
     'ckeditor_uploader',
-    'main',
-
     'rest_framework',
-<<<<<<< HEAD
     'corsheaders',
     'main'
-=======
->>>>>>> 6d3f542b5726dba33c9ac591389cebbd3ec800df
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -205,14 +200,9 @@ CKEDITOR_CONFIGS = {
             'youtube'
         ]),
     }
-<<<<<<< HEAD
 }
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000"
 ]
 
-
-=======
-}
->>>>>>> 6d3f542b5726dba33c9ac591389cebbd3ec800df
