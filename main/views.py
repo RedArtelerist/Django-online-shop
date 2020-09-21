@@ -291,6 +291,8 @@ def delete_product(request, pk):
 
 
 #json API Products
+
+@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def apiOverview(request):
     api_urls = {
@@ -303,6 +305,7 @@ def apiOverview(request):
     return Response(api_urls)
 
 
+@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def ProductList(request):
     products = Product.objects.all()
@@ -310,6 +313,7 @@ def ProductList(request):
     return Response(serializer.data)
 
 
+@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def ProductDetail(request, pk):
     try:
@@ -320,6 +324,7 @@ def ProductDetail(request, pk):
         return Response(status=404)
 
 
+@allowed_users(allowed_roles=['admin'])
 @api_view(['POST'])
 def ProductCreate(request):
         serializer = ProductSerializer(data=request.data)
@@ -330,6 +335,7 @@ def ProductCreate(request):
             return Response(status=505)
 
 
+@allowed_users(allowed_roles=['admin'])
 @api_view(['PUT'])
 def ProductUpdate(request, pk):
         product = Product.objects.get(id=pk)
@@ -344,6 +350,7 @@ def ProductUpdate(request, pk):
             return Response(status=505)
 
 
+@allowed_users(allowed_roles=['admin'])
 @api_view(['DELETE'])
 def ProductDelete(request, pk, ):
     try:
@@ -354,7 +361,6 @@ def ProductDelete(request, pk, ):
         raise APIException("Error!")
 
 
-=======
 # JSON API for Category
 
 @allowed_users(allowed_roles=['admin'])
