@@ -1,8 +1,12 @@
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls import url
 from . import views
+from .views import *
+from rest_framework.routers import DefaultRouter
+
 
 urlpatterns = [
+
     path('', views.index, name='home'),
     path('store', views.store, name='store'),
     path('about', views.about, name='about'),
@@ -27,5 +31,12 @@ urlpatterns = [
     path('update_product/<str:pk>', views.update_product, name="update_product"),
     path('delete_product/<str:pk>', views.delete_product, name="delete_product"),
 
+    #json
+    path('api/', views.apiOverview, name="api-overview"),
+    path('product-list/', views.ProductList, name="product-list"),
+    path('product-detail/<str:pk>/', views.ProductDetail, name="product-detail"),
+    path('product-create/', views.ProductCreate, name="product-create"),
+    path('product-update/<str:pk>/', views.ProductUpdate, name="product-update"),
+    path('product-delete/<str:pk>/', views.ProductDelete, name="product-delete"),
 
 ]
