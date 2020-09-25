@@ -6,6 +6,7 @@
 
 {% block css_link %}
     <link rel="stylesheet" href="{% static 'css/store.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
 {% endblock%}
 
 {% block content %}
@@ -38,6 +39,17 @@
                                          <p class="product-price" style="font-weight: 700;">${{ product.price|floatformat:2}}</p>
                                       </div>
                                   {% endif %}
+                                    <div style="display: flex">
+                                        <div style="color: orange;" class="product-rating">
+                                            <i class="fa fa-star{% if product.avaregereview < 1 %}-o empty{% endif%}"></i>
+                                            <i class="fa fa-star{% if product.avaregereview < 2 %}-o empty{% endif%}"></i>
+                                            <i class="fa fa-star{% if product.avaregereview < 3 %}-o empty{% endif%}"></i>
+                                            <i class="fa fa-star{% if product.avaregereview < 4 %}-o empty{% endif%}"></i>
+                                            <i class="fa fa-star{% if product.avaregereview < 5 %}-o empty{% endif%}"></i>
+                                            {{ product.avaregereview |stringformat:".2f"}}
+                                        </div>
+                                        <div style="margin-left: 10px"> {{ product.countreview}} Review(s)</div>
+                                    </div>
                               </div>
 
                               <div class="info">

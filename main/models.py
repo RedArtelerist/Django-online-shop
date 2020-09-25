@@ -1,5 +1,7 @@
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models import *
+
 from .validations import *
 from django.contrib.auth.models import User
 import decimal
@@ -94,6 +96,33 @@ class Product(models.Model):
         except:
             url = 'media/placeholder.png'
         return url
+
+    def get_comment(self):
+        return self.comment_set.filter(parent__isnull=True).order_by('-id')
+
+    def get_review(self):
+        return self.review_set.filter(status=True).order_by('-data_added')
+
+    def countcomment(self):
+        comments = Comment.objects.filter(product=self, parent__isnull=True).aggregate(count=Count('id'))
+        cnt = 0
+        if comments["count"] is not None:
+            cnt = int(comments["count"])
+        return cnt
+
+    def countreview(self):
+        reviews = Review.objects.filter(product=self, status=True).aggregate(count=Count('id'))
+        cnt = 0
+        if reviews["count"] is not None:
+            cnt = int(reviews["count"])
+        return cnt
+
+    def avaregereview(self):
+        reviews = Review.objects.filter(product=self, status='True').aggregate(avarage=Avg('rate'))
+        avg = 0
+        if reviews["avarage"] is not None:
+            avg = float(reviews["avarage"])
+        return avg
 
     class Meta:
         verbose_name = 'Product'
@@ -204,3 +233,43 @@ class ShippingAddress(models.Model):
     class Meta:
         verbose_name = 'Shipping address'
         verbose_name_plural = 'Shipping addresses'
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField('Name', max_length=100, null=True, blank=True)
+    email = models.EmailField('Email', max_length=100, null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
+    text = models.TextField("Message", max_length=5000)
+    parent = models.ForeignKey('self', verbose_name="Parent", on_delete=models.CASCADE, blank=True, null=True)
+    data_added = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Comment"
+        verbose_name_plural = "Comments"
+
+
+class Review(models.Model):
+    STATUS = (
+        ('New', 'New'),
+        ('True', 'True'),
+        ('False', 'False'),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
+    subject = models.CharField(max_length=30, blank=True)
+    text = models.TextField("Review", max_length=5000)
+    rate = models.IntegerField(default=1)
+    status = models.CharField(max_length=10, choices=STATUS, default='New')
+    data_added = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return self.subject
+
+    class Meta:
+        verbose_name = "Review"
+        verbose_name_plural = "Reviews"

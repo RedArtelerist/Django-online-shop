@@ -10,7 +10,7 @@ urlpatterns = [
     path('', views.index, name='home'),
     path('store', views.store, name='store'),
     path('about', views.about, name='about'),
-    url(r'^product/(?P<product_id>\w+)/$', views.product, name='product'),
+    path('product/<str:product_id>', views.product, name='product'),
     path('cart', views.cart, name='cart'),
     path('checkout', views.checkout, name='checkout'),
     path('update_item/', views.updateItem, name='update_item'),
@@ -19,7 +19,7 @@ urlpatterns = [
     path('category/', views.category_form, name='category_insert'),  # get and post req. for insert operation
     path('category/<int:id>/', views.category_form, name='category_update'),  # get and post req. for update operation
     path('category/delete/<int:id>/', views.category_delete, name='category_delete'),
-    path('category/list/', views.category_list, name='category_list'), # get req. to retrieve and display all records
+    path('category/list/', views.category_list, name='category_list'),  # get req. to retrieve and display all records
 
     path('company/', views.company_form, name='company_insert'),  # get and post req. for insert operation
     path('company/<int:id>/', views.company_form, name='company_update'),  # get and post req. for update operation
@@ -52,4 +52,12 @@ urlpatterns = [
     path('company-create/', views.companyCreate, name='company-create'),
     path('company-update/<str:pk>/', views.companyUpdate, name='company-update'),
     path('company-delete/<str:pk>/', views.companyDelete, name='company-delete'),
+
+    path("comment/<int:pk>/", views.addComment, name="add-comment"),
+    path('comment/<int:pk>/<int:id>/', views.addComment, name='update-comment'),  # get and post req. for update operation
+    path('comment/delete/<int:pk>/<int:id>/', views.comment_delete, name='delete-comment'),
+
+    path("review/<int:pk>/", views.addReview, name="add-review"),
+    path('review/<int:pk>/<int:id>/', views.addReview, name='update-review'),  # get and post req. for update operation
+    path('review/delete/<int:pk>/<int:id>/', views.review_delete, name='delete-review'),
 ]

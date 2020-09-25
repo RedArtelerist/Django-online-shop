@@ -60,7 +60,7 @@ def product(request, product_id):
 
     product = Product.objects.get(id=product_id)
     productImages = product.imageitem_set.all()
-    return render(request, 'main/product.html', {'title': product.name, 'product': product, 'productImages': productImages, 'cartItems': cartItems})
+    return render(request, 'main/product.html', {'title': product.name, 'product': product, 'productImages': productImages, 'cartItems': cartItems, 'user': request.user})
 
 
 def cart(request):
@@ -144,6 +144,70 @@ def processOrder(request):
         )
     return JsonResponse('Payment complete!', safe=False)
 
+
+#Comment CRUD
+
+def addComment(request, pk, id=0):
+    product = Product.objects.get(id=pk)
+    parent = None
+
+    if id == 0:
+        form = CommentForm(request.POST)
+    else:
+        comment = Comment.objects.get(pk=id)
+        parent = comment.parent
+        form = CommentForm(request.POST, instance=comment)
+
+    if form.is_valid():
+        form = form.save(commit=False)
+        if request.user.is_authenticated:
+            form.user = request.user
+            form.name = request.user.username
+            form.email = request.user.email
+
+        form.parent = parent
+        if request.POST.get("parent", None) and id == 0:
+            form.parent_id = int(request.POST.get("parent"))
+        form.product = product
+        form.data_added = datetime.datetime.now()
+        form.save()
+
+    return redirect('product', product_id=pk)
+
+
+def comment_delete(request, pk, id):
+    comment = Comment.objects.get(pk=id)
+    comment.delete()
+    return redirect('product', product_id=pk)
+
+#Review CRUD
+
+
+def addReview(request, pk, id=0):
+    product = Product.objects.get(id=pk)
+
+    if id == 0:
+        form = ReviewForm(request.POST)
+    else:
+        review = Review.objects.get(pk=id)
+        form = ReviewForm(request.POST, instance=review)
+
+    if form.is_valid():
+        form = form.save(commit=False)
+        if request.user.is_authenticated:
+            form.user = request.user
+
+        form.product = product
+        form.data_added = datetime.datetime.now()
+        form.save()
+
+    return redirect('product', product_id=pk)
+
+
+def review_delete(request, pk, id):
+    review = Review.objects.get(pk=id)
+    review.delete()
+    return redirect('product', product_id=pk)
 
 #CRUD for Category
 
@@ -292,7 +356,7 @@ def delete_product(request, pk):
 
 #json API Products
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def apiOverview(request):
     api_urls = {
@@ -305,7 +369,7 @@ def apiOverview(request):
     return Response(api_urls)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def ProductList(request):
     products = Product.objects.all()
@@ -313,7 +377,7 @@ def ProductList(request):
     return Response(serializer.data)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def ProductDetail(request, pk):
     try:
@@ -324,7 +388,7 @@ def ProductDetail(request, pk):
         return Response(status=404)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['POST'])
 def ProductCreate(request):
         serializer = ProductSerializer(data=request.data)
@@ -335,7 +399,7 @@ def ProductCreate(request):
             return Response(status=505)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['PUT'])
 def ProductUpdate(request, pk):
         product = Product.objects.get(id=pk)
@@ -344,13 +408,12 @@ def ProductUpdate(request, pk):
             serializer.save()
             return Response(serializer.data)
         else:
-            serializer.data['image'] = "pidor"
             #print(serializer.errors)
             print(serializer.data['image'])
             return Response(status=505)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['DELETE'])
 def ProductDelete(request, pk, ):
     try:

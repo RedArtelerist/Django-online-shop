@@ -1,0 +1,88 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% load i18n %}
+<h3 class="editContent">
+    {% trans 'Leave a review' %}
+</h3>
+
+<form id="review_form" class="review-form mt-4" action="{% url 'add-review' product.id %}" method="post">
+    {% csrf_token %}
+    <div class="col-sm-6 form-group p-0 editContent">
+        <input id="contactsubject" name="subject" class="input" type="text" placeholder="Your subject" minlength="3" maxlength="30" required />
+    </div>
+    <div class="form-group editContent">
+        <textarea id="contactreview" name="text" class="input" placeholder="Your review" minlength="10" maxlength="5000" required></textarea>
+    </div>
+    <div class="form-group">
+        <div class="input-rating">
+            <strong class="text-uppercase">Your Rating: </strong>
+            <div id="rating" class="stars">
+                <input type="radio" id="star5" name="rate" value="5" /><label for="star5"></label>
+                <input type="radio" id="star4" name="rate" value="4" /><label for="star4"></label>
+                <input type="radio" id="star3" name="rate" value="3" /><label for="star3"></label>
+                <input type="radio" id="star2" name="rate" value="2" /><label for="star2"></label>
+                <input type="radio" id="star1" name="rate" value="1" /><label for="star1"></label>
+            </div>
+        </div>
+    </div>
+    {% if user.id is not None %}
+        <button id="addReview" class="primary-btn">Submit</button>
+    {% else %}
+        You must be logged in to post a review
+    {% endif %}
+</form>
+
+<div class="product-reviews">
+    {% for review in product.get_review %}
+        <hr>
+        <div class="single-review media py-5" style="display: flex">
+            <img src="{% static 'media/icons/profile-placeholder.png' %}" class="mr-3 img-fluid-rev" alt="image">
+            <div class="review-item">
+                <div class="review-heading">
+                    <div style="color: #5c2699"> {{ review.user.username }} </div>
+                    <div><b>{{ review.subject }}</b> </div>
+                    <div style="color: #0f74a8"><i class="fa fa-clock-o"></i> {{ review.data_added}}</div>
+
+                    <div class="review-rating">
+                        <i class="fa fa-star{% if review.rate < 1 %}-o empty{% endif %}"></i>
+                        <i class="fa fa-star{% if review.rate < 2 %}-o empty{% endif %}"></i>
+                        <i class="fa fa-star{% if review.rate < 3 %}-o empty{% endif %}"></i>
+                        <i class="fa fa-star{% if review.rate < 4 %}-o empty{% endif %}"></i>
+                        <i class="fa fa-star{% if review.rate < 5 %}-o empty{% endif %}"></i>
+                    </div>
+                </div>
+                <div class="review-body">
+                    <p>{{ review.text }}</p>
+                    {% if user.id == review.user.id and review.user %}
+                        <a href="#" onclick="editReview('{{ review.id }}', '{{ review.subject }}', '{{ review.text }}', '{{ review.rate }}')" class="edit btn text-secondary px-0">
+                            <i class="far fa-edit fa-lg"></i>
+                        </a>
+                        <form action="{% url 'delete-review' product.id review.id %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn">
+                                <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <!--<ul class="reviews-pages">
+        <li class="active">1</li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#"><i class="fa fa-caret-right"></i></a></li>
+    </ul>-->
+</div>
+
+<script>
+    function editReview(id, subject, text, rate){
+         document.getElementById("contactsubject").value = `${subject}`
+         document.getElementById("contactreview").value = `${text}`
+         var star = '#rating input#star' + rate;
+         $(star).attr("checked", "checked");
+         url = '/review/' + {{product.id}} + '/' + id + '/';
+         $('#review_form').attr('action', url);
+    }
+</script>

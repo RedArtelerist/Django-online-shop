@@ -135,7 +135,41 @@ class ImageItemAdmin(admin.ModelAdmin):
     def get_image(self, obj):
         return mark_safe(f'<img src={obj.image.url} width="100" style="max-height: 250px""')
 
-
     get_image.short_description = 'Image'
 
 
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'user', 'product', 'parent', 'data_added')
+    readonly_fields = ('user', 'parent', 'data_added', 'name', 'email')
+
+    fieldsets = (
+            (None, {
+                "fields": (('user', 'product', 'data_added'),)
+            }),
+            (None, {
+                "fields": (('name', 'email',),)
+            }),
+            (None, {
+                "fields": ('parent', 'text',)
+            }),
+        )
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('subject', 'user', 'product', 'data_added', 'status')
+    list_filter = ['status']
+    readonly_fields = ('subject', 'text', 'user', 'product', 'rate', 'data_added')
+
+    fieldsets = (
+            (None, {
+                "fields": ('status',)
+            }),
+            (None, {
+                "fields": (('user', 'product', 'data_added'),)
+            }),
+            (None, {
+                "fields": ('subject', 'text', 'rate')
+            }),
+        )

@@ -158,8 +158,6 @@
     background-color: #18b5ce;
 }
 
-
-
 .arrow{
     width: 30px;
     height: 30px;
@@ -172,3 +170,21 @@
     width: 35px;
     height: 35px;
 }
+
+
+.mr-3.img-fluid-com{
+    margin-top: 15px;
+    width: 80px;
+}
+
+.mr-3.img-fluid-rev{
+    width: 80px;
+    margin-top: -10px;
+}
+
+.head-comment{
+    display: flex;
+    margin-right: 10px;
+}
+
+
