@@ -7,10 +7,24 @@
 {% block css_link %}
     <link rel="stylesheet" href="{% static 'css/store.css' %}">
     <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/filter.css' %}">
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 {% endblock%}
 
 {% block content %}
-    <div class="container">
+    <script>
+        var data = "{{ products }}"
+    </script>
+
+    <div class="filter">
+        {% include 'main/filter.html' %}
+    </div>
+    <div class="container products-list" style="margin-left: 350px">
+    {% with productss=data %}
         {% if products %}
               <div class="row">
                   {% for product in products %}
@@ -41,12 +55,12 @@
                                   {% endif %}
                                     <div style="display: flex">
                                         <div style="color: orange;" class="product-rating">
-                                            <i class="fa fa-star{% if product.avaregereview < 1 %}-o empty{% endif%}"></i>
-                                            <i class="fa fa-star{% if product.avaregereview < 2 %}-o empty{% endif%}"></i>
-                                            <i class="fa fa-star{% if product.avaregereview < 3 %}-o empty{% endif%}"></i>
-                                            <i class="fa fa-star{% if product.avaregereview < 4 %}-o empty{% endif%}"></i>
-                                            <i class="fa fa-star{% if product.avaregereview < 5 %}-o empty{% endif%}"></i>
-                                            {{ product.avaregereview |stringformat:".2f"}}
+                                            <i class="fa fa-star{% if product.averegereview < 1 %}-o empty{% endif%}"></i>
+                                            <i class="fa fa-star{% if product.averegereview < 2 %}-o empty{% endif%}"></i>
+                                            <i class="fa fa-star{% if product.averegereview < 3 %}-o empty{% endif%}"></i>
+                                            <i class="fa fa-star{% if product.averegereview < 4 %}-o empty{% endif%}"></i>
+                                            <i class="fa fa-star{% if product.averegereview < 5 %}-o empty{% endif%}"></i>
+                                            {{ product.averegereview |stringformat:".2f"}}
                                         </div>
                                         <div style="margin-left: 10px"> {{ product.countreview}} Review(s)</div>
                                     </div>
@@ -68,7 +82,10 @@
         {% else %}
             <h1 class="no-products">No products</h1>
         {% endif %}
-        </div>
-
+    {% endwith %}
+    </div>
+    <div class="class1"></div>
+<script src="{% static 'js/filter.js' %}"></script>
+<script src="http://twitter.github.com/hogan.js/builds/3.0.1/hogan-3.0.1.js"></script>
+<script type="text/javascript" src="../main/node_modules/swig/lib/swig.js"></script>
 {% endblock %}
-

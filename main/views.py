@@ -1,34 +1,24 @@
+from django.views.generic import ListView
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.exceptions import MethodNotAllowed, APIException
-from rest_framework.response import Response
-import json
-import datetime
-
 
 from .decorators import unauthenticated_user, allowed_users
 
-from .models import *
+from .serializers import *
 from .utils import *
 from .forms import *
 
-
-from django.utils.baseconv import base64
-from base64 import b64encode
-from json import dumps
 from rest_framework.exceptions import APIException
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
-from rest_framework import generics
 from rest_framework.views import APIView
 
-from .serializers import *
 
 # Create your views here.
 
+# ------------------------------------   Pages   ----------------------------------------------------------------------------------
 
 def index(request):
     cookieData = cartData(request)
@@ -49,9 +39,167 @@ def store(request):
     cartItems = cookieData['cartItems']
 
     categories = Category.objects.order_by('name')
+    companies = Company.objects.order_by('name')
+    countries = Company.objects.order_by('country').values('country').distinct()
     products = Product.objects.filter(isActive=True)
 
-    return render(request, 'main/store.html', {'title': 'Store', 'products': products, 'categories': categories, 'cartItems': cartItems})
+    prices = []
+    for product in products:
+        prices.append(product.discount_price)
+    max_price = max(prices)
+    min_price = min(prices)
+    print(min_price, " ", max_price)
+
+    """cat_names = []
+    comp_names = []
+    comp_countries = []
+    for name in Category.objects.values("id"):
+        cat_names.append(name['id'])
+
+    for name in Company.objects.values("id"):
+        comp_names.append(name['id'])
+
+    for country in Company.objects.values("country").distinct():
+        comp_countries.append(country['country'])
+
+    list_category = request.GET.getlist("category")
+    list_company = request.GET.getlist("company")
+    list_country = request.GET.getlist("country")
+
+    minprice = request.GET.getlist("minprice")
+    maxprice = request.GET.getlist("maxprice")
+    print(minprice, ' ', maxprice)
+    if minprice == [''] or minprice == []:
+        minprice = min_price
+    else: minprice = minprice[0]
+    if maxprice == [''] or maxprice == []:
+        maxprice = max_price
+    else:maxprice = maxprice[0]
+    print(minprice, ' ', maxprice)
+
+    queryset = []
+    if len(list_category) == 0:
+        list_category = cat_names
+    if len(list_company) == 0:
+        list_company = comp_names
+    if len(list_country) == 0:
+        list_country = comp_countries
+
+    queryset = Product.objects.filter(
+        isActive=True,
+        category__in=list_category,
+        company__in=list_company,
+        company__country__in=list_country,
+    ).distinct()
+
+    products_queryset = []
+    for product in queryset:
+        if float(minprice) - 0.01 <= product.discount_price <= float(maxprice) + 0.01:
+            products_queryset.append(product)"""
+
+    return render(request, 'main/store.html',
+                  {'title': 'Store',
+                   'products': products,
+                   'maxprice': max_price,
+                   'minprice': min_price,
+                   'categories': categories,
+                   'companies': companies,
+                   'countries': countries,
+                   'cartItems': cartItems})
+
+
+# ------------------------------------   Filter Products   ----------------------------------------------------------------------------------
+
+class JsonFilterProductsView(ListView):
+    def get_queryset(self):
+        products = Product.objects.filter(isActive=True)
+
+        prices = []
+        for product in products:
+            prices.append(product.discount_price)
+        max_price = max(prices)
+        min_price = min(prices)
+
+        cat_names = []
+        comp_names = []
+        comp_countries = []
+        for name in Category.objects.values("id"):
+            cat_names.append(name['id'])
+
+        for name in Company.objects.values("id"):
+            comp_names.append(name['id'])
+
+        for country in Company.objects.values("country").distinct():
+            comp_countries.append(country['country'])
+
+        list_category = self.request.GET.getlist("category")
+        list_company = self.request.GET.getlist("company")
+        list_country = self.request.GET.getlist("country")
+
+        minprice = self.request.GET.getlist("minprice")
+        maxprice = self.request.GET.getlist("maxprice")
+        print(minprice, ' ', maxprice)
+        if minprice == [''] or minprice == []:
+            minprice = min_price
+        else:
+            minprice = minprice[0]
+        if maxprice == [''] or maxprice == []:
+            maxprice = max_price
+        else:
+            maxprice = maxprice[0]
+        print(minprice, ' ', maxprice)
+
+        if len(list_category) == 0:
+            list_category = cat_names
+        if len(list_company) == 0:
+            list_company = comp_names
+        if len(list_country) == 0:
+            list_country = comp_countries
+
+        queryset = Product.objects.annotate(
+            discount_price=ExpressionWrapper((Value(1.0) - F('discount') / Value(100.0)) * F('price'),
+                                             output_field=FloatField()),
+            count_review=Count('review'),
+            average_review=Avg('review__rate')).filter(
+            isActive=True,
+            category__in=list_category,
+            company__in=list_company,
+            company__country__in=list_country,
+        ).distinct().values("id", "image", "name", "price", "discount", "shortSpecifications", "discount_price",
+                            "count_review", "average_review")
+
+        products_queryset = []
+        for product in queryset:
+            if float(minprice) - 0.01 <= product['discount_price'] <= float(maxprice) + 0.01:
+                products_queryset.append(product)
+
+        print(products_queryset)
+
+        return products_queryset
+
+    def get(self, request, *args, **kwargs):
+        """cookieData = cartData(request)
+        cartItems = cookieData['cartItems']
+
+        products = Product.objects.filter(isActive=True)
+        prices = []
+        for product in products:
+            prices.append(product.discount_price)
+        max_price = max(prices)
+        min_price = min(prices)
+
+        categories = Category.objects.order_by('name')
+        companies = Company.objects.order_by('name')
+        countries = Company.objects.order_by('country').values('country').distinct()"""
+
+        queryset = list(self.get_queryset())
+        for q in queryset:
+            if q['average_review'] is None:
+                q['average_review'] = 0.00
+            q['average_review'] = format(q['average_review'], '.2f')
+            q['discount_price'] = format(q['discount_price'], '.2f')
+
+        return JsonResponse({"products": queryset})
 
 
 def product(request, product_id):
@@ -60,7 +208,39 @@ def product(request, product_id):
 
     product = Product.objects.get(id=product_id)
     productImages = product.imageitem_set.all()
-    return render(request, 'main/product.html', {'title': product.name, 'product': product, 'productImages': productImages, 'cartItems': cartItems, 'user': request.user})
+    return render(request, 'main/product.html',
+                  {'title': product.name,
+                   'product': product,
+                   'productImages': productImages,
+                   'cartItems': cartItems,
+                   'user': request.user})
+
+
+"""class FilterProductsView(ListView):
+    # paginate_by = 5
+
+    def get_queryset(self):
+        cookieData = cartData(self.request)
+        cartItems = cookieData['cartItems']
+
+        categories = Category.objects.order_by('name')
+        companies = Company.objects.order_by('name')
+        countries = Company.objects.order_by('country').values('country').distinct()
+
+        queryset = Product.objects.filter(
+            Q(category__in=self.request.GET.getlist("category")) |
+            Q(company__in=self.request.GET.getlist("company"))
+        ).distinct()
+        # return queryset
+        return render(self.request, 'main/store.html',
+                      {'title': 'Store', 'products': queryset,
+                       'categories': categories,
+                       'companies': companies,
+                       'countries': countries,
+                       'cartItems': cartItems})"""
+
+
+# ------------------------------------   Cart and Checkout   ----------------------------------------------------------------------------------
 
 
 def cart(request):
@@ -78,7 +258,8 @@ def checkout(request):
     order = cookieData['order']
     items = cookieData['items']
 
-    return render(request, 'main/checkout.html', {'title': 'Checkout', 'items': items, 'order': order, 'cartItems': cartItems})
+    return render(request, 'main/checkout.html',
+                  {'title': 'Checkout', 'items': items, 'order': order, 'cartItems': cartItems})
 
 
 def updateItem(request):
@@ -131,7 +312,7 @@ def processOrder(request):
         order.complete = True
     order.save()
 
-    if order.shipping == True:
+    if order.shipping:
         print('Shipping address')
         ShippingAddress.objects.create(
             customer=customer,
@@ -145,7 +326,8 @@ def processOrder(request):
     return JsonResponse('Payment complete!', safe=False)
 
 
-#Comment CRUD
+# ------------------------------------   Comment CRUD   ----------------------------------------------------------------------------------
+
 
 def addComment(request, pk, id=0):
     product = Product.objects.get(id=pk)
@@ -180,7 +362,8 @@ def comment_delete(request, pk, id):
     comment.delete()
     return redirect('product', product_id=pk)
 
-#Review CRUD
+
+# ------------------------------------   Review CRUD   ----------------------------------------------------------------------------------
 
 
 def addReview(request, pk, id=0):
@@ -209,7 +392,9 @@ def review_delete(request, pk, id):
     review.delete()
     return redirect('product', product_id=pk)
 
-#CRUD for Category
+
+# ------------------------------------   CRUD for Category   ----------------------------------------------------------------------------------
+
 
 @allowed_users(allowed_roles=['admin'])
 def category_list(request):
@@ -218,7 +403,8 @@ def category_list(request):
 
     categories = Category.objects.order_by('name')
 
-    return render(request, 'main/category_list.html', {'title': 'Categories', 'categories': categories, 'cartItems': cartItems})
+    return render(request, 'main/category_list.html',
+                  {'title': 'Categories', 'categories': categories, 'cartItems': cartItems})
 
 
 @allowed_users(allowed_roles=['admin'])
@@ -253,7 +439,8 @@ def category_delete(request, id):
     return redirect('/category/list')
 
 
-#CRUD for Company
+# ------------------------------------   CRUD for Company   ----------------------------------------------------------------------------------
+
 
 @allowed_users(allowed_roles=['admin'])
 def company_list(request):
@@ -262,7 +449,8 @@ def company_list(request):
 
     companies = Company.objects.order_by('name')
 
-    return render(request, 'main/company_list.html', {'title': 'Categories', 'companies': companies, 'cartItems': cartItems})
+    return render(request, 'main/company_list.html',
+                  {'title': 'Categories', 'companies': companies, 'cartItems': cartItems})
 
 
 @allowed_users(allowed_roles=['admin'])
@@ -296,7 +484,8 @@ def company_delete(request, id):
     company.delete()
     return redirect('/company/list')
 
-#CRUD for Product
+
+# ------------------------------------   CRUD for Product   ----------------------------------------------------------------------------------
 
 
 @allowed_users(allowed_roles=['admin'])
@@ -354,9 +543,10 @@ def delete_product(request, pk):
     return render(request, 'main/product_crud/delete_product.html', context)
 
 
-#json API Products
+# ------------------------------------   json API Products   ----------------------------------------------------------------------------------
 
-#@allowed_users(allowed_roles=['admin'])
+
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def apiOverview(request):
     api_urls = {
@@ -369,7 +559,7 @@ def apiOverview(request):
     return Response(api_urls)
 
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def ProductList(request):
     products = Product.objects.all()
@@ -377,7 +567,7 @@ def ProductList(request):
     return Response(serializer.data)
 
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def ProductDetail(request, pk):
     try:
@@ -388,32 +578,25 @@ def ProductDetail(request, pk):
         return Response(status=404)
 
 
-#@allowed_users(allowed_roles=['admin'])
-@api_view(['POST'])
-def ProductCreate(request):
-        serializer = ProductSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+class ProductView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, pk=0, *args, **kwargs):
+        if pk == 0:
+            product_serializer = ProductSerializer(data=request.data)
         else:
-            return Response(status=505)
+            product = Product.objects.get(id=pk)
+            product_serializer = ProductSerializer(instance=product, data=request.data, many=False, partial=True)
 
-
-#@allowed_users(allowed_roles=['admin'])
-@api_view(['PUT'])
-def ProductUpdate(request, pk):
-        product = Product.objects.get(id=pk)
-        serializer = ProductSerializer(instance=product, data=request.data, many=False, partial = True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+        if product_serializer.is_valid():
+            product_serializer.save()
+            return Response(product_serializer.data)
         else:
-            #print(serializer.errors)
-            print(serializer.data['image'])
-            return Response(status=505)
+            print('error', product_serializer.errors)
+            return Response(product_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['DELETE'])
 def ProductDelete(request, pk, ):
     try:
@@ -424,9 +607,9 @@ def ProductDelete(request, pk, ):
         raise APIException("Error!")
 
 
-# JSON API for Category
+# ------------------------------------   json API Category   ----------------------------------------------------------------------------------
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def categoryList(request):
     categories = Category.objects.order_by('-id')
@@ -434,7 +617,7 @@ def categoryList(request):
     return Response(serializer.data)
 
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def categoryDetail(request, pk):
     try:
@@ -445,7 +628,7 @@ def categoryDetail(request, pk):
         raise APIException("Detail Error")
 
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['POST'])
 def categoryCreate(request):
     serializer = CategorySerializer(data=request.data)
@@ -458,10 +641,9 @@ def categoryCreate(request):
     return Response(serializer.data)
 
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['PUT'])
 def categoryUpdate(request, pk):
-
     try:
         category = Category.objects.get(id=pk)
         serializer = CategorySerializer(instance=category, data=request.data)
@@ -476,7 +658,7 @@ def categoryUpdate(request, pk):
         raise APIException("Update Error")
 
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['DELETE'])
 def categoryDelete(request, pk):
     try:
@@ -487,9 +669,9 @@ def categoryDelete(request, pk):
         raise APIException("Delete Error")
 
 
-# JSON API for Company
+# ------------------------------------   json API Company   ----------------------------------------------------------------------------------
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def companyList(request):
     companies = Company.objects.order_by('-id')
@@ -497,7 +679,7 @@ def companyList(request):
     return Response(serializer.data)
 
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def companyDetail(request, pk):
     try:
@@ -508,7 +690,7 @@ def companyDetail(request, pk):
         raise APIException("Detail Error")
 
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['POST'])
 def companyCreate(request):
     serializer = CompanySerializer(data=request.data)
@@ -521,7 +703,7 @@ def companyCreate(request):
     return Response(serializer.data)
 
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['PUT'])
 def companyUpdate(request, pk):
     try:
@@ -538,7 +720,7 @@ def companyUpdate(request, pk):
         raise APIException("Update Error")
 
 
-#@allowed_users(allowed_roles=['admin'])
+# @allowed_users(allowed_roles=['admin'])
 @api_view(['DELETE'])
 def companyDelete(request, pk):
     try:
@@ -547,3 +729,45 @@ def companyDelete(request, pk):
         return Response("Ok")
     except:
         raise APIException("Delete Error")
+
+
+# ------------------------------------   Map   ----------------------------------------------------------------------------------
+
+def renderMap(request):
+    cookieData = cartData(request)
+    cartItems = cookieData['cartItems']
+    addresses = ShippingAddress.objects.distinct().values("country", "state", "city", "address", "zipcode")
+
+    queryset = list(addresses)
+
+    print(queryset)
+
+    return render(request, 'main/mapBox.html', {'title': 'Map', "addresses": addresses, "items": json.dumps(queryset), 'cartItems': cartItems})
+
+
+# ------------------------------------   Chart   ----------------------------------------------------------------------------------
+def renderCharts(request):
+    cookieData = cartData(request)
+    cartItems = cookieData['cartItems']
+
+    orders = Order.objects.filter(complete=True)
+    products_by_orders = dict()
+    company_by_orders = dict()
+    categories_by_orders = dict()
+
+    for order in orders:
+        items = order.orderitem_set.all()
+        for item in items:
+            key1 = item.product.name
+            products_by_orders[key1] = products_by_orders.get(key1, 0) + item.quantity
+
+            key2 = item.product.category.name
+            company_by_orders[key2] = company_by_orders.get(key2, 0) + item.quantity
+
+            key3 = item.product.company.name
+            categories_by_orders[key3] = categories_by_orders.get(key3, 0) + item.quantity
+
+    list = [products_by_orders, company_by_orders, categories_by_orders]
+    print(list)
+
+    return render(request, 'main/Charts.html', {'title': 'Charts', 'data': json.dumps(list), 'cartItems': cartItems})

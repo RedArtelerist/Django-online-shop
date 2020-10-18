@@ -9,6 +9,7 @@ urlpatterns = [
 
     path('', views.index, name='home'),
     path('store', views.store, name='store'),
+    path('json-filter/', views.JsonFilterProductsView.as_view(), name='json_filter'),
     path('about', views.about, name='about'),
     path('product/<str:product_id>', views.product, name='product'),
     path('cart', views.cart, name='cart'),
@@ -33,10 +34,14 @@ urlpatterns = [
 
     #json urls products
     path('api/', views.apiOverview, name="api-overview"),
+
     path('product-list/', views.ProductList, name="product-list"),
     path('product-detail/<str:pk>/', views.ProductDetail, name="product-detail"),
-    path('product-create/', views.ProductCreate, name="product-create"),
-    path('product-update/<str:pk>/', views.ProductUpdate, name="product-update"),
+    #path('product-create/', views.ProductCreate, name="product-create"),
+    #path('product-update/<str:pk>/', views.ProductUpdate, name="product-update"),
+    path('product-create/', views.ProductView.as_view(), name="product-create"),
+    path('product-create/<str:pk>/', views.ProductView.as_view(), name="product-update"),
+
     path('product-delete/<str:pk>/', views.ProductDelete, name="product-delete"),
     
     #json urls category
@@ -60,4 +65,8 @@ urlpatterns = [
     path("review/<int:pk>/", views.addReview, name="add-review"),
     path('review/<int:pk>/<int:id>/', views.addReview, name='update-review'),  # get and post req. for update operation
     path('review/delete/<int:pk>/<int:id>/', views.review_delete, name='delete-review'),
+
+    path('mapBox', views.renderMap, name='mapBox'),
+    path('charts', views.renderCharts, name='charts'),
+
 ]

@@ -58,6 +58,8 @@
             <span style="color: #0c5460; font-size: .8em;"><i class="fa fa-clock-o"></i>{{ comment.data_added }}</span>
             <h5 class="mt-0 editContent">
                 {{ comment.name }}
+                <a style="color: #0000FF" href="#formComment"
+               onclick="addComment('{{ comment.name }}', '{{ comment.id }}')"><i class="fa fa-reply"></i></a>
             </h5>
             <p class="mt-2 editContent">
                 {{ comment.text }}
@@ -74,30 +76,35 @@
                     </button>
                 </form>
             {% endif %}
-            <a style="color: #0000FF" href="#formComment"
-               onclick="addComment('{{ comment.name }}', '{{ comment.id }}')">Ответить</a>
-            {% for com in comment.comment_set.all %}
-                <hr>
-                <div class="media mt-5 editContent">
-                    <img src="{% static 'media/icons/profile-placeholder.png' %}" class="mr-3 img-fluid-com" alt="image">
-                    <div class="media-body mt-4">
-                        <span style="color: #0c5460; font-size: .8em;"><i class="fa fa-clock-o"></i>{{ com.data_added }}</span>
-                        <h5 class="mt-0 editContent">{{ com.name }}</h5>
-                        <p class="text-comment mt-2 editContent">{{ com.text }}</p>
-                        {% if user.id == com.user.id and com.user %}
-                            <a href="#" onclick="editComment('{{ com.id }}', '{{ com.text }}', '{{ com.name }}', '{{ com.email }}' )" class="edit btn text-secondary px-0">
-                                <i class="far fa-edit fa-lg"></i>
-                            </a>
-                            <form action="{% url 'delete-comment' product.id com.id %}" method="post" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn">
-                                    <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
-                                </button>
-                            </form>
-                        {% endif %}
+
+            {% if comment.countreplies %}
+                <div class="comment-more-button pressed done" onclick="showReplies(this)"><i class="fa fa-caret-down"></i> Show replies (<span>{{ comment.countreplies}}</span>)</div>
+                <div class="comment-more-button pressed done show" data-num="1" onclick="hideReplies(this)"><i class="fa fa-caret-up"></i> Hide replies (<span>{{ comment.countreplies}}</span>)</div>
+            {% endif %}
+            <div class="replies">
+                {% for com in comment.comment_set.all %}
+                    <div class="media mt-5 editContent">
+                        <img src="{% static 'media/icons/profile-placeholder.png' %}" class="mr-3 img-fluid-com" alt="image">
+                        <div class="media-body mt-4">
+                            <span style="color: #0c5460; font-size: .8em;"><i class="fa fa-clock-o"></i>{{ com.data_added }}</span>
+                            <h5 class="mt-0 editContent">{{ com.name }}</h5>
+                            <p class="text-comment mt-2 editContent">{{ com.text }}</p>
+                            {% if user.id == com.user.id and com.user %}
+                                <a href="#" onclick="editComment('{{ com.id }}', '{{ com.text }}', '{{ com.name }}', '{{ com.email }}' )" class="edit btn text-secondary px-0">
+                                    <i class="far fa-edit fa-lg"></i>
+                                </a>
+                                <form action="{% url 'delete-comment' product.id com.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn">
+                                        <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                    <hr>
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endfor %}
@@ -122,6 +129,49 @@
          $('#comment_form').attr('action', url);
          //console.log($('#comment_form').attr('action'))
     }
+
+    function showReplies(button){
+         //var h = $(button).next().next().addClass("replies2").css("height");
+         var h = $(button).next().next().outerHeight();
+         console.log(h);
+         $(button).css("display", "none");
+         $(button).next().css("display", "block");
+         $(button).next().next().addClass("replies2");
+
+         /*$(button).next().next().animate({
+            height: h,
+        },
+        5000, 'swing');*/
+    }
+    function hideReplies(button){
+         $(button).css("display", "none");
+         $(button).next().removeClass("replies2");
+         $(button).prev().css("display", "block");
+    }
+</script>
+
+
+<script type="text/javascript">
+    function moreComments(button, comment_id) {
+        var that = $(button);
+        var commentBlock = that.parents('.comment-block');
+        var childs = commentBlock.find('.comment-childs');
+        if (!that.hasClass('show')) {
+            that.html('<i class="fa fa-caret-up"></i> Скрыть ответы (<span>' + that.data('num') + '</span>)');
+            childs.parent().css('max-height', childs.outerHeight());
+            setTimeout(function () {
+                childs.parent().css('overflow', 'visible');
+            }, 400);
+        } else {
+            that.html('<i class="fa fa-caret-down"></i> Показать ответы (<span>' + that.data('num') + '</span>)');
+            childs.parent().css('overflow', '').css('max-height', 0);
+        }
+        that.toggleClass('show');
+        setTimeout(function () {
+            that.removeClass('blocked')
+        }, 400);
+    }
+
 </script>
 
 <script type="text/javascript" src="{% static 'js/product.js' %}"></script>

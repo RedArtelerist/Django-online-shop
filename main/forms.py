@@ -66,3 +66,6 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['subject', 'text', 'rate']
+
+
+

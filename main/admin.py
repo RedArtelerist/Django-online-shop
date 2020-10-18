@@ -173,3 +173,6 @@ class ReviewAdmin(admin.ModelAdmin):
                 "fields": ('subject', 'text', 'rate')
             }),
         )
+
+
+admin.site.register(Post)

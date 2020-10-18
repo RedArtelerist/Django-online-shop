@@ -54,12 +54,12 @@
             </div>
             <div>
                 <div style="color: orange; font-size: 2em" class="product-rating">
-                    <i class="fa fa-star{% if product.avaregereview < 1 %}-o empty{% endif%}"></i>
-                    <i class="fa fa-star{% if product.avaregereview < 2 %}-o empty{% endif%}"></i>
-                    <i class="fa fa-star{% if product.avaregereview < 3 %}-o empty{% endif%}"></i>
-                    <i class="fa fa-star{% if product.avaregereview < 4 %}-o empty{% endif%}"></i>
-                    <i class="fa fa-star{% if product.avaregereview < 5 %}-o empty{% endif%}"></i>
-                    {{ product.avaregereview |stringformat:".2f"}}
+                    <i class="fa fa-star{% if product.averegereview < 1 %}-o empty{% endif%}"></i>
+                    <i class="fa fa-star{% if product.averegereview < 2 %}-o empty{% endif%}"></i>
+                    <i class="fa fa-star{% if product.averegereview < 3 %}-o empty{% endif%}"></i>
+                    <i class="fa fa-star{% if product.averegereview < 4 %}-o empty{% endif%}"></i>
+                    <i class="fa fa-star{% if product.averegereview < 5 %}-o empty{% endif%}"></i>
+                    {{ product.averegereview |stringformat:".2f"}}
                 </div>
             </div>
             <div class="product-tab">

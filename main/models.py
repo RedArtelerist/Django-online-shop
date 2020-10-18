@@ -117,12 +117,13 @@ class Product(models.Model):
             cnt = int(reviews["count"])
         return cnt
 
-    def avaregereview(self):
-        reviews = Review.objects.filter(product=self, status='True').aggregate(avarage=Avg('rate'))
+    def averegereview(self):
+        reviews = Review.objects.filter(product=self, status='True').aggregate(average=Avg('rate'))
         avg = 0
-        if reviews["avarage"] is not None:
-            avg = float(reviews["avarage"])
+        if reviews["average"] is not None:
+            avg = float(reviews["average"])
         return avg
+
 
     class Meta:
         verbose_name = 'Product'
@@ -173,7 +174,7 @@ class Order(models.Model):
 
     @property
     def shipping(self):
-        shipping = False;
+        shipping = False
         orderItems = self.orderitem_set.all()
 
         for item in orderItems:
@@ -211,12 +212,12 @@ class ShippingAddress(models.Model):
         code='invalid_cityname'
     ), ])
     state = models.CharField('State', max_length=30, null=True, validators=[RegexValidator(
-        regex='^[a-zA-Z\s_-]*$',
+        regex='^[a-zA-Z\'\s_-]*$',
         message='State must be Alphabetic',
         code='invalid_statename'
     ), ])
     address = models.CharField('Address', max_length=200, null=True, validators=[RegexValidator(
-        regex='^[a-zA-Z0-9/\\s_-]*$',
+        regex='^[a-zA-Z0-9\',./\\s_-]*$',
         message='Address must be Alphanumerical',
         code='invalid_addressname'
     ), ])
@@ -247,6 +248,13 @@ class Comment(models.Model):
     def __str__(self):
         return self.name
 
+    def countreplies(self):
+        replies = Comment.objects.filter(parent=self.id).aggregate(count=Count('id'))
+        cnt = 0
+        if replies["count"] is not None:
+            cnt = int(replies["count"])
+        return cnt
+
     class Meta:
         verbose_name = "Comment"
         verbose_name_plural = "Comments"
@@ -273,3 +281,12 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Review"
         verbose_name_plural = "Reviews"
+
+
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    image = models.ImageField(default="placeholder.png", null=True, blank=True)
+
+    def __str__(self):
+        return self.title

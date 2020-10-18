@@ -198,7 +198,7 @@ var addressNameValidityChecks = [
 	},
 	{
 		isInvalid: function (input) {
-			var illegalCharacters = input.value.match(/[^a-zA-Z0-9\s-\/]/g);
+			var illegalCharacters = input.value.match(/[^a-zA-Z0-9\s-\/',]/g);
 			return illegalCharacters ? true : false;
 		},
 		invalidityMessage: 'Only letters and digits are allowed',

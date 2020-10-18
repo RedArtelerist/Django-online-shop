@@ -187,4 +187,31 @@
     margin-right: 10px;
 }
 
+.comment-more-button {
+    text-align: center;
+    padding: 8px 8px 8px 30px;
+    border: 1px solid #e2e2e2;
+    cursor: pointer;
+}
+.comment-more-button.show{
+    display: none;
+}
 
+.replies{
+    height: 0;
+    overflow: hidden;
+}
+
+.replies2{
+    height: 0;
+    overflow: hidden;
+    animation: slide ease 1s forwards;
+}
+
+@keyframes slide {
+    0% {height: 0;}
+    25% {height: 25%}
+    50% {height: 50%}
+    75% {height: 75%}
+    to {height: 100%;}
+}
