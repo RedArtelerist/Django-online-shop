@@ -4,6 +4,8 @@ from . import views
 from .views import *
 from rest_framework.routers import DefaultRouter
 
+from django.conf.urls import url
+
 
 urlpatterns = [
 
@@ -52,4 +54,9 @@ urlpatterns = [
     path('company-create/', views.companyCreate, name='company-create'),
     path('company-update/<str:pk>/', views.companyUpdate, name='company-update'),
     path('company-delete/<str:pk>/', views.companyDelete, name='company-delete'),
+
+
+
+
+
 ]

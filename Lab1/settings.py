@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'rest_framework',
     'corsheaders',
-    'main'
+    'main',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -64,7 +64,9 @@ ROOT_URLCONF = 'Lab1.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'django-react-frontend/build')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,7 +130,7 @@ STATIC_URL = '/static/'
 # The absolute path to the directory where collectstatic will collect static files for deployment.
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'django-react-frontend/build/static')]
 
 MEDIA_URL = '/media/'
 
@@ -202,7 +204,6 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-CORS_ALLOWED_ORIGINS = [
+CORS_ORIGIN_WHITELIS = [
     "http://localhost:3000"
 ]
-

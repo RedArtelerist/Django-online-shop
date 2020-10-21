@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import MethodNotAllowed, APIException
 from rest_framework.response import Response
 import json
 import datetime
-
-
+from django.conf import settings
+from django.urls import reverse
 from .decorators import unauthenticated_user, allowed_users
 
 from .models import *
@@ -27,7 +30,12 @@ from rest_framework.views import APIView
 
 from .serializers import *
 
-# Create your views here.
+
+
+from django.views.generic import TemplateView
+from django.shortcuts import render
+from django.http import HttpResponse
+
 
 
 def index(request):
@@ -292,7 +300,7 @@ def delete_product(request, pk):
 
 #json API Products
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def apiOverview(request):
     api_urls = {
@@ -305,7 +313,7 @@ def apiOverview(request):
     return Response(api_urls)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def ProductList(request):
     products = Product.objects.all()
@@ -313,7 +321,7 @@ def ProductList(request):
     return Response(serializer.data)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def ProductDetail(request, pk):
     try:
@@ -324,18 +332,30 @@ def ProductDetail(request, pk):
         return Response(status=404)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['POST'])
 def ProductCreate(request):
         serializer = ProductSerializer(data=request.data)
+
         if serializer.is_valid():
-            serializer.save()
+
+            print('aaaaaaaaaaaaaaaaa')
+            image = serializer.validated_data.get('image')
+
+            serializer_g = serializer.save()
+            print(image)
+
+            if image is None:
+                serializer_g.image = "placeholder.png"
+
+            serializer_g.save()
+            # serializer.save()
             return Response(serializer.data)
         else:
             return Response(status=505)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['PUT'])
 def ProductUpdate(request, pk):
         product = Product.objects.get(id=pk)
@@ -344,13 +364,10 @@ def ProductUpdate(request, pk):
             serializer.save()
             return Response(serializer.data)
         else:
-            serializer.data['image'] = "pidor"
-            #print(serializer.errors)
-            print(serializer.data['image'])
             return Response(status=505)
 
 
-@allowed_users(allowed_roles=['admin'])
+#@allowed_users(allowed_roles=['admin'])
 @api_view(['DELETE'])
 def ProductDelete(request, pk, ):
     try:
@@ -484,3 +501,5 @@ def companyDelete(request, pk):
         return Response("Ok")
     except:
         raise APIException("Delete Error")
+
+
