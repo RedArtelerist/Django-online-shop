@@ -2,6 +2,30 @@
 {% load crispy_forms_filters %}
 {% load static %}
 {% load crispy_forms_tags %}
+
+{% block css_link %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" />
+
+    <script>
+        $(document).ready(function (){
+            $('#id_category').select2({
+                minimumInputLength:3,
+                allowClear: true,
+                placeholder: '--Select--',
+            });
+        });
+
+        $(document).ready(function (){
+            $('#id_company').select2({
+                minimumInputLength:3,
+                allowClear: true,
+                placeholder: '--Select--'
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
 
 <div class="container">
