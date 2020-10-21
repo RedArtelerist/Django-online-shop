@@ -1,0 +1,117 @@
+{% load static %}
+
+<form action="{% url 'json_filter' %}" method="get" name="filter" class="filter-sidebar">
+    <div class="card">
+        <article class="filter-group">
+            <header class="card-header"> <a href="#" data-toggle="collapse" data-target="#categories" data-abc="true" aria-expanded="false" class="collapsed"> <i class="icon-control fa fa-chevron-down"></i>
+                <h6 class="title">Category</h6>
+            </a> </header>
+            <div class="filter-content collapse" id="categories" style="">
+                <div class="card-body">
+                    <ul class="list-menu">
+                        {% for category in categories %}
+                            <label class="custom-control"> <input type="checkbox" class="custom-control-input" name="category" value="{{ category.id }}">
+                                <div class="custom-control-label">{{ category.name }}</div>
+                            </label>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <article class="filter-group">
+            <header class="card-header"> <a href="#" data-toggle="collapse" data-target="#companies" data-abc="true" class="collapsed" aria-expanded="false"> <i class="icon-control fa fa-chevron-down"></i>
+                <h6 class="title">Company </h6>
+            </a> </header>
+            <div class="filter-content collapse" id="companies" style="">
+                <div class="card-body">
+                    {% for company in companies %}
+                        <label class="custom-control">
+                            <input type="checkbox"  class="custom-control-input" name="company" value="{{ company.id }}">
+                            <div class="custom-control-label">{{ company.name }}</div>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </article>
+
+        <article class="filter-group">
+            <header class="card-header"> <a href="#" data-toggle="collapse" data-target="#countries" data-abc="true" class="collapsed" aria-expanded="false"> <i class="icon-control fa fa-chevron-down"></i>
+                <h6 class="title">Country</h6>
+            </a> </header>
+            <div class="filter-content collapse" id="countries" style="">
+                <div class="card-body">
+                    {% for country in countries %}
+                        <label class="custom-control">
+                            <input type="checkbox"  class="custom-control-input" name="country" value="{{ country.country }}">
+                            <div class="custom-control-label">{{ country.country }}</div>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </article>
+
+        <article class="filter-group">
+            <header class="card-header"> <a href="#" data-toggle="collapse" data-target="#price" data-abc="true" aria-expanded="false" class="collapsed"> <i class="icon-control fa fa-chevron-down"></i>
+                <h6 class="title">Price </h6>
+            </a> </header>
+            <div class="filter-content collapse" id="price" style="">
+                <div class="card-body">
+                    <p>
+                        <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    </p>
+
+                    <div id="slider-range"></div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Min</label>
+                            <p><input class="form-control" placeholder="${{ minprice|floatformat:2 }}" id="minprice" name="minprice" type="number" step=any></p>
+                        </div>
+                        <div class="form-group text-right col-md-6">
+                            <label>Max</label>
+                            <p><input class="form-control" placeholder="${{ maxprice|floatformat:2 }}" id="maxprice" name="maxprice" type="number" step=any></p>
+                        </div>
+                    </div>
+                    <a href="#" class="highlight-button btn btn-medium button xs-margin-bottom-five" data-abc="true">Apply Now</a>
+                </div>
+            </div>
+        </article>
+    </div>
+    <div style="display: flex">
+        <button class="highlight-button btn btn-medium button xs-margin-bottom-five" type="submit">Find</button>
+        <a href="{% url 'store' %}" class="highlight-button-clear btn btn-medium-clear button xs-margin-bottom-five">Clear</a>
+    </div>
+</form>
+
+<script>
+    $( function() {
+        let minvalue = {{ minprice|floatformat:2 }};
+        let maxvalue = {{ maxprice|floatformat:2 }};
+
+        minvalue = parseInt(minvalue)
+        if(maxvalue - parseInt(maxvalue) !== 0)
+            maxvalue = parseInt(maxvalue) + 1
+
+        console.log(minvalue, maxvalue)
+
+        $("#slider-range").slider({
+            range: true,
+            min: minvalue,
+            max: maxvalue,
+            values: [ minvalue, maxvalue ],
+            slide: function( event, ui ) {
+
+                $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                $("#minprice").val(ui.values[0]);
+                $("#maxprice").val(ui.values[1]);
+            }
+        });
+
+
+        console.log($("#slider-range").slider("values", 1))
+
+        $("#amount").val("$" + $( "#slider-range" ).slider("values", 0) +
+            " - $" + $( "#slider-range" ).slider("values", 1));
+    });
+</script>
+

@@ -1,0 +1,177 @@
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+<div class="row">
+    <div class="container">
+        <!-- contact form grid -->
+        <div class="contact-single">
+            <h3 class="editContent">
+                {% trans 'Leave a comment' %}
+            </h3>
+
+            <form action="{% url 'add-comment' product.id %}" method="post" name="comment_form" id="comment_form" class="mt-4">
+                {% csrf_token %}
+                <input type="hidden" name="parent" id="contactparent" value="">
+                <div class="form-group editContent">
+                    <label for="contactcomment" class="editContent">
+                        Your comment *
+                    </label>
+                    <!--{form.text|as_crispy_field}}-->
+                    <p><textarea class="form-control border" rows="5" name="text" id="contactcomment" minlength="10" maxlength="1000" required=""></textarea></p>
+                </div>
+                <div style="display: flex" id="user-info">
+                    <div class="col-sm-6 form-group p-0 editContent">
+                        <label for="contactusername" class="editContent">
+                            Name *
+                        </label>
+                        <!--{form.name|as_crispy_field}}-->
+                        <p><input type="text" class="form-control border" name="name" id="contactusername" minlength="3" maxlength="40" required></p>
+                    </div>
+                    <div class="col-sm-6 form-group ml-sm-3 editContent">
+                        <label for="contactemail" class="editContent">
+                            Email *
+                        </label>
+                        <!--{form.email|as_crispy_field}}-->
+                        <p><input type="email" class="form-control border" name="email" id="contactemail" required></p>
+                    </div>
+                </div>
+
+                <button id="addComment" type="submit"
+                        class="btn btn-success">
+                    Send
+                </button>
+            </form>
+        </div>
+        <!--  //contact form grid ends here -->
+    </div>
+
+</div>
+
+<div id="comments_list">
+{% for comment in product.get_comment %}
+    <hr>
+    <div class="media py-5" style="display: flex">
+        <img src="{% static 'media/icons/profile-placeholder.png' %}" class="mr-3 img-fluid-com" alt="image">
+        <div class="media-body mt-4 comment-info">
+
+            <span style="color: #0c5460; font-size: .8em;"><i class="fa fa-clock-o"></i>{{ comment.data_added }}</span>
+            <h5 class="mt-0 editContent">
+                {{ comment.name }}
+                <a style="color: #0000FF" href="#formComment"
+               onclick="addComment('{{ comment.name }}', '{{ comment.id }}')"><i class="fa fa-reply"></i></a>
+            </h5>
+            <p class="mt-2 editContent">
+                {{ comment.text }}
+            </p>
+
+            {% if user.id == comment.user.id and comment.user %}
+                <a href="#" onclick="editComment('{{ comment.id }}', '{{ comment.text }}', '{{ comment.name }}', '{{ comment.email }}' )" class="edit btn text-secondary px-0">
+                    <i class="far fa-edit fa-lg"></i>
+                </a>
+                <form action="{% url 'delete-comment' product.id comment.id %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">
+                        <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
+                    </button>
+                </form>
+            {% endif %}
+
+            {% if comment.countreplies %}
+                <div class="comment-more-button pressed done" onclick="showReplies(this)"><i class="fa fa-caret-down"></i> Show replies (<span>{{ comment.countreplies}}</span>)</div>
+                <div class="comment-more-button pressed done show" data-num="1" onclick="hideReplies(this)"><i class="fa fa-caret-up"></i> Hide replies (<span>{{ comment.countreplies}}</span>)</div>
+            {% endif %}
+            <div class="replies">
+                {% for com in comment.comment_set.all %}
+                    <div class="media mt-5 editContent">
+                        <img src="{% static 'media/icons/profile-placeholder.png' %}" class="mr-3 img-fluid-com" alt="image">
+                        <div class="media-body mt-4">
+                            <span style="color: #0c5460; font-size: .8em;"><i class="fa fa-clock-o"></i>{{ com.data_added }}</span>
+                            <h5 class="mt-0 editContent">{{ com.name }}</h5>
+                            <p class="text-comment mt-2 editContent">{{ com.text }}</p>
+                            {% if user.id == com.user.id and com.user %}
+                                <a href="#" onclick="editComment('{{ com.id }}', '{{ com.text }}', '{{ com.name }}', '{{ com.email }}' )" class="edit btn text-secondary px-0">
+                                    <i class="far fa-edit fa-lg"></i>
+                                </a>
+                                <form action="{% url 'delete-comment' product.id com.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn">
+                                        <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <hr>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+ <script>
+     if (user != 'AnonymousUser'){
+		document.getElementById('user-info').innerHTML = ''
+	 }
+
+    function addComment(name, id) {
+        console.log(id, name)
+        document.getElementById("contactparent").value = id;
+        document.getElementById("contactcomment").innerText = "";
+        document.getElementById("contactcomment").value = `${name}, `
+    }
+
+    function editComment(id, text, name, email){
+         document.getElementById("contactcomment").innerText = `${text}`
+         //console.log($('#comment_form').attr('action'))
+         url = '/comment/' + {{product.id}} + '/' + id + '/';
+         $('#comment_form').attr('action', url);
+         //console.log($('#comment_form').attr('action'))
+    }
+
+    function showReplies(button){
+         //var h = $(button).next().next().addClass("replies2").css("height");
+         var h = $(button).next().next().outerHeight();
+         console.log(h);
+         $(button).css("display", "none");
+         $(button).next().css("display", "block");
+         $(button).next().next().addClass("replies2");
+
+         /*$(button).next().next().animate({
+            height: h,
+        },
+        5000, 'swing');*/
+    }
+    function hideReplies(button){
+         $(button).css("display", "none");
+         $(button).next().removeClass("replies2");
+         $(button).prev().css("display", "block");
+    }
+</script>
+
+
+<script type="text/javascript">
+    function moreComments(button, comment_id) {
+        var that = $(button);
+        var commentBlock = that.parents('.comment-block');
+        var childs = commentBlock.find('.comment-childs');
+        if (!that.hasClass('show')) {
+            that.html('<i class="fa fa-caret-up"></i> Скрыть ответы (<span>' + that.data('num') + '</span>)');
+            childs.parent().css('max-height', childs.outerHeight());
+            setTimeout(function () {
+                childs.parent().css('overflow', 'visible');
+            }, 400);
+        } else {
+            that.html('<i class="fa fa-caret-down"></i> Показать ответы (<span>' + that.data('num') + '</span>)');
+            childs.parent().css('overflow', '').css('max-height', 0);
+        }
+        that.toggleClass('show');
+        setTimeout(function () {
+            that.removeClass('blocked')
+        }, 400);
+    }
+
+</script>
+
+<script type="text/javascript" src="{% static 'js/product.js' %}"></script>

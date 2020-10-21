@@ -1,10 +1,12 @@
 {% extends 'main/base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}
 {{ title }}
 {% endblock %}
 
 {% block css_link %}
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/product.css' %}">
 {% endblock%}
 
@@ -14,7 +16,6 @@
 
     <div id="content-wrapper">
         <div class="column item">
-
             <div class="product-image-item">
                 <img id="featured" class="img-responsive" src="{{ product.imageURL }}">
             </div>
@@ -52,35 +53,49 @@
                 <button data-product="{{product.id}}" data-action="add" class="button update-cart">Buy</button>
             </div>
             <div>
+                <div style="color: orange; font-size: 2em" class="product-rating">
+                    <i class="fa fa-star{% if product.averegereview < 1 %}-o empty{% endif%}"></i>
+                    <i class="fa fa-star{% if product.averegereview < 2 %}-o empty{% endif%}"></i>
+                    <i class="fa fa-star{% if product.averegereview < 3 %}-o empty{% endif%}"></i>
+                    <i class="fa fa-star{% if product.averegereview < 4 %}-o empty{% endif%}"></i>
+                    <i class="fa fa-star{% if product.averegereview < 5 %}-o empty{% endif%}"></i>
+                    {{ product.averegereview |stringformat:".2f"}}
+                </div>
+            </div>
+            <div class="product-tab">
                 <!-- Nav tabs -->
-                <ul class="nav nav-tabs">
+                <ul class="nav nav-tabs tab-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#description">Description</a>
+                        <a class="nav-link" data-toggle="tab" href="#description">Description</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#specifications">Specifications</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#reviews">Reviews</a>
+                        <a class="nav-link" data-toggle="tab" href="#reviews">Reviews ({{ product.countreview }})</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#comments">Comments</a>
+                        <a class="nav-link" data-toggle="tab" href="#comments">Comments ({{ product.countcomment }})</a>
                     </li>
                 </ul>
                 <div class="tab-content p-3">
                     <div class="tab-pane active" id="description">
-                        <h2 class="h4 mb-3">Product description</h2>
+                        <h3 class="editContent">
+                            {% trans 'Product description' %}
+                        </h3>
                         <p>{{ product.description|safe }}</p>
                     </div>
-                    <div class="tab-pane" id="specifications">
-                        <h2 class="h4 mb-3">Product specifications</h2>
+                    <div class="tab-pane fade in" id="specifications">
+                        <h3 class="editContent">
+                            {% trans 'Product specifications' %}
+                        </h3>
                         <p>{{ product.specifications|safe }}</p>
                     </div>
-                    <div class="tab-pane" id="reviews">
-                        <h2 class="h4 mb-3">Reviews</h2>
+                    <div class="tab-pane fade in" id="reviews">
+                        {% include "main/review.html" %}
                     </div>
-                     <div class="tab-pane" id="comments">
-                        <h2 class="h4 mb-3">Comments</h2>
+                    <div class="tab-pane fade in" id="comments">
+                        {% include "main/comment.html" %}
                     </div>
                 </div>
             </div>
@@ -92,34 +107,34 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
-			let thumbnails = document.getElementsByClassName('thumbnail')
-			let activeImages = document.getElementsByClassName('active')
-			for (var i=0; i < thumbnails.length; i++){
-				thumbnails[i].addEventListener('mouseover', function(){
+    let thumbnails = document.getElementsByClassName('thumbnail')
+    let activeImages = document.getElementsByClassName('active')
+    for (var i=0; i < thumbnails.length; i++){
+        thumbnails[i].addEventListener('mouseover', function(){
 
-					if (activeImages.length > 0){
-						activeImages[0].classList.remove('active')
-					}
+            if (activeImages.length > 0){
+                activeImages[0].classList.remove('active')
+            }
 
-					this.classList.add('active')
-					document.getElementById('featured').src = this.src
-				})
+            this.classList.add('active')
+            document.getElementById('featured').src = this.src
+        })
 
-			}
+    }
 
-			const buttonRight = document.getElementById('slideRight');
-			const buttonLeft = document.getElementById('slideLeft');
+    const buttonRight = document.getElementById('slideRight');
+    const buttonLeft = document.getElementById('slideLeft');
 
 
-			buttonRight.addEventListener('click', function(){
-				document.getElementById('slider').scrollLeft += 180;
-		    })
+    buttonRight.addEventListener('click', function(){
+        document.getElementById('slider').scrollLeft += 180;
+    })
 
-		    buttonLeft.addEventListener('click', function(){
-		      document.getElementById('slider').scrollLeft -= 180;
-		    })
+    buttonLeft.addEventListener('click', function(){
+      document.getElementById('slider').scrollLeft -= 180;
+    })
 
-	</script>
+</script>
 {% endblock %}
 
 

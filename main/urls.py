@@ -11,8 +11,9 @@ urlpatterns = [
 
     path('', views.index, name='home'),
     path('store', views.store, name='store'),
+    path('json-filter/', views.JsonFilterProductsView.as_view(), name='json_filter'),
     path('about', views.about, name='about'),
-    url(r'^product/(?P<product_id>\w+)/$', views.product, name='product'),
+    path('product/<str:product_id>', views.product, name='product'),
     path('cart', views.cart, name='cart'),
     path('checkout', views.checkout, name='checkout'),
     path('update_item/', views.updateItem, name='update_item'),
@@ -21,7 +22,7 @@ urlpatterns = [
     path('category/', views.category_form, name='category_insert'),  # get and post req. for insert operation
     path('category/<int:id>/', views.category_form, name='category_update'),  # get and post req. for update operation
     path('category/delete/<int:id>/', views.category_delete, name='category_delete'),
-    path('category/list/', views.category_list, name='category_list'), # get req. to retrieve and display all records
+    path('category/list/', views.category_list, name='category_list'),  # get req. to retrieve and display all records
 
     path('company/', views.company_form, name='company_insert'),  # get and post req. for insert operation
     path('company/<int:id>/', views.company_form, name='company_update'),  # get and post req. for update operation
@@ -35,10 +36,14 @@ urlpatterns = [
 
     #json urls products
     path('api/', views.apiOverview, name="api-overview"),
+
     path('product-list/', views.ProductList, name="product-list"),
     path('product-detail/<str:pk>/', views.ProductDetail, name="product-detail"),
-    path('product-create/', views.ProductCreate, name="product-create"),
-    path('product-update/<str:pk>/', views.ProductUpdate, name="product-update"),
+    #path('product-create/', views.ProductCreate, name="product-create"),
+    #path('product-update/<str:pk>/', views.ProductUpdate, name="product-update"),
+    path('product-create/', views.ProductView.as_view(), name="product-create"),
+    path('product-create/<str:pk>/', views.ProductView.as_view(), name="product-update"),
+
     path('product-delete/<str:pk>/', views.ProductDelete, name="product-delete"),
     
     #json urls category
@@ -56,7 +61,16 @@ urlpatterns = [
     path('company-delete/<str:pk>/', views.companyDelete, name='company-delete'),
 
 
+    path("comment/<int:pk>/", views.addComment, name="add-comment"),
+    path('comment/<int:pk>/<int:id>/', views.addComment, name='update-comment'),  # get and post req. for update operation
+    path('comment/delete/<int:pk>/<int:id>/', views.comment_delete, name='delete-comment'),
 
+    path("review/<int:pk>/", views.addReview, name="add-review"),
+    path('review/<int:pk>/<int:id>/', views.addReview, name='update-review'),  # get and post req. for update operation
+    path('review/delete/<int:pk>/<int:id>/', views.review_delete, name='delete-review'),
+
+    path('mapBox', views.renderMap, name='mapBox'),
+    path('charts', views.renderCharts, name='charts'),
 
 
 ]

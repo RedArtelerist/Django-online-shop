@@ -1,0 +1,116 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block css_link %}
+     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; right: 0; width: 50%; margin: 80px 15px 10px;}
+    </style>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+<link
+        rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+        type="text/css"
+/>
+{% endblock%}
+
+{% block content %}
+
+        <div class="col-md-6 mt-4">
+            <div class="jumbotron">
+                <h1 class="display-4">Shipping Addresses</h1>
+                <hr class="my-4">
+
+                <table class="table table-borderless">
+                    <thead class="border-bottom font-weight-bold">
+                        <tr>
+                            <td>Country</td>
+                            <td>State</td>
+                            <td>City</td>
+                            <td>Address</td>
+                            <td>Zipcode</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for val in addresses %}
+                            <tr>
+                                <td>{{val.country}}</td>
+                                <td>{{val.state}}</td>
+                                <td>{{val.city}}</td>
+                                <td>{{val.address}}</td>
+                                <td>{{val.zipcode}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/es6-promise@4.2.4/dist/es6-promise.auto.min.js"></script>
+    <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoicmVkYXJ0ZWxlcmlzdCIsImEiOiJja2diMWo3MXowOGY0MnJtY2NncjU1NGd2In0.-pRFkldO74bhxSTKoMZeeQ';
+
+        var addresses = {{ items | safe }};
+
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [0, 0],
+            zoom: 1
+        });
+
+        map.addControl(
+            new MapboxGeocoder({
+                accessToken: mapboxgl.accessToken,
+                mapboxgl: mapboxgl
+            })
+        );
+
+
+        map.addControl(new mapboxgl.FullscreenControl());
+        map.addControl(new mapboxgl.NavigationControl());
+
+
+        var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+        for (var i = 0; i < addresses.length; i++) {
+            var str = addresses[i].address + ", " + addresses[i].city + ", " + addresses[i].country;
+            console.log(str);
+
+            mapboxClient.geocoding
+                .forwardGeocode({
+                    query: str,
+                    autocomplete: false,
+                    limit: 1
+                })
+                .send()
+                .then(function (response) {
+                    if (
+                        response &&
+                        response.body &&
+                        response.body.features &&
+                        response.body.features.length
+                    ) {
+                        var feature = response.body.features[0];
+                        var popup = new mapboxgl.Popup({ offset: 25 }).setText(
+                            feature.place_name
+                        );
+
+                        new mapboxgl.Marker().setLngLat(feature.center).setPopup(popup).addTo(map);
+                    }
+                });
+        }
+    </script>
+
+{% endblock %}
