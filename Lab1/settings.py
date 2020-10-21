@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'rest_framework',
     'corsheaders',
-    'main'
+    'main',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -207,4 +207,3 @@ CKEDITOR_CONFIGS = {
 CORS_ORIGIN_WHITELIS = [
     "http://localhost:3000"
 ]
-

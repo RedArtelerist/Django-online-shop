@@ -4,6 +4,8 @@ from . import views
 from .views import *
 from rest_framework.routers import DefaultRouter
 
+from django.conf.urls import url
+
 
 urlpatterns = [
 
@@ -58,6 +60,7 @@ urlpatterns = [
     path('company-update/<str:pk>/', views.companyUpdate, name='company-update'),
     path('company-delete/<str:pk>/', views.companyDelete, name='company-delete'),
 
+
     path("comment/<int:pk>/", views.addComment, name="add-comment"),
     path('comment/<int:pk>/<int:id>/', views.addComment, name='update-comment'),  # get and post req. for update operation
     path('comment/delete/<int:pk>/<int:id>/', views.comment_delete, name='delete-comment'),
@@ -68,5 +71,6 @@ urlpatterns = [
 
     path('mapBox', views.renderMap, name='mapBox'),
     path('charts', views.renderCharts, name='charts'),
+
 
 ]

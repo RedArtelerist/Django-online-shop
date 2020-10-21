@@ -73,6 +73,10 @@ class ProductAdmin(admin.ModelAdmin):
     )
 
     def get_image(self, obj):
+        if obj.image.url:
+            pass
+        else:
+            return mark_safe(f'<img src= width="100" style="max-height: 250px"')
         return mark_safe(f'<img src={obj.image.url} width="100" style="max-height: 250px"')
 
     get_image.short_description = 'Image'

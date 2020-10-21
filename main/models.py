@@ -63,8 +63,11 @@ class Company(models.Model):
         verbose_name_plural = 'Companies'
 
 
+def upload_path(instance, filname):
+    return '/static/media'.join([filname])
+
 class Product(models.Model):
-    image = models.ImageField(null=True, blank=True, default='placeholder.png')
+    image = models.ImageField(null=True, blank=True, upload_to='media', default='placeholder.png')
     name = models.CharField('Name', max_length=50, null=True, unique=True, validators=[RegexValidator(
         regex='^[a-zA-Z0-9/\s)(._-]*$',
         message='Product name must be Alphabetic',
@@ -234,7 +237,6 @@ class ShippingAddress(models.Model):
     class Meta:
         verbose_name = 'Shipping address'
         verbose_name_plural = 'Shipping addresses'
-
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
