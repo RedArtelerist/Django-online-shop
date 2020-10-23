@@ -1,15 +1,100 @@
 {% extends 'main/base.html' %}
 {% load static %}
 {% block content %}
+{% block css_link %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        $(function (){
+            $("#searchField").autocomplete({
+                source: '{% url 'products_table' %}',
+                minLength: 3,
+                delay: 200,
+            });
+        })
+    </script>
+{% endblock %}
 <br>
 <div>
     <h1 align="center">Products</h1>
 </div>
 
 <br>
-<a class="btn btn-primary btn btn-block btn-lg " href="{% url 'create_product' %}">Create product</a>
     <div class="col-sm">
-        <table class = "table table-striped">
+
+        <div class="row">
+            <div class="col-md-12"></div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="searchField" placeholder="Search">
+                </div>
+            </div>
+        </div>
+
+        <a class="btn btn-primary btn btn-block btn-lg " href="{% url 'create_product' %}">Create product</a>
+
+
+        <div class="app-table">
+            <table class = "table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Image</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Short specifications</th>
+                        <th scope="col">Discount</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">Active</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Company</th>
+                        <th scope="col">Digital</th>
+                        <th scope="col">Change</th>
+                        <th scope="col">Remove</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td><img src="{{product.imageURL}}" height="50" weight="50"> </td>
+                            <td>{{product.name}}</td>
+                            <td>{{product.price}}</td>
+                            <td>{{product.shortSpecifications|safe}}</td>
+                            <td>{{product.discount}}%</td>
+                            <td>{{product.year}}</td>
+                            <td>
+                                {% if product.isActive == True %}
+                                <img src="../static/media/icons/check.png" height="25" weight="25">
+                                {% else %}
+                                <img src="../static/media/icons/cross.png" height="20" weight="20">
+                                {% endif %}
+                            </td>
+                            <td>{{product.category}}</td>
+                            <td>{{product.company}}</td>
+                            <td>
+                                {% if product.digital == True %}
+                                <img src="../static/media/icons/check.png" height="25" weight="25">
+                                {% else %}
+                                <img src="../static/media/icons/cross.png" height="20" weight="20">
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a class="btn btn-warning" href="{% url 'update_product' product.id %}">Change</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-danger" href="{% url 'delete_product' product.id %}">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor%}
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="table-output">
+            <table class = "table table-striped">
             <thead>
                 <tr>
                     <th scope="col">Image</th>
@@ -27,40 +112,12 @@
                 </tr>
             </thead>
 
-            <tbody>
-                {% for product in products %}
-                    <tr>
-                        <td><img src="{{product.imageURL}}" height="50" weight="50"> </td>
-                        <td>{{product.name}}</td>
-                        <td>{{product.price}}</td>
-                        <td>{{product.shortSpecifications|safe}}</td>
-                        <td>{{product.discount}}%</td>
-                        <td>{{product.year}}</td>
-                        <td>
-                            {% if product.isActive == True %}
-                            <img src="../static/media/icons/check.png" height="25" weight="25">
-                            {% else %}
-                            <img src="../static/media/icons/cross.png" height="20" weight="20">
-                            {% endif %}
-                        </td>
-                        <td>{{product.category}}</td>
-                        <td>{{product.company}}</td>
-                        <td>
-                            {% if product.digital == True %}
-                            <img src="../static/media/icons/check.png" height="25" weight="25">
-                            {% else %}
-                            <img src="../static/media/icons/cross.png" height="20" weight="20">
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a class="btn btn-warning" href="{% url 'update_product' product.id %}">Change</a>
-                        </td>
-                        <td>
-                            <a class="btn btn-danger" href="{% url 'delete_product' product.id %}">Delete</a>
-                        </td>
-                    </tr>
-                {% endfor%}
+            <tbody class="table-body">
+
             </tbody>
         </table>
+        </div>
     </div>
+
+<script src="{% static 'js/searchProducts.js' %}"></script>
 {% endblock %}

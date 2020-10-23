@@ -1,14 +1,12 @@
 from django.urls import path, include
-from django.conf.urls import url
-from . import views
+from django.views.decorators.csrf import csrf_exempt
+
 from .views import views
 from .views import viewsCRUD
 from .views import viewsJsonApi
 from .views import viewsMap
 from .views import viewsCharts
-from rest_framework.routers import DefaultRouter
 
-from django.conf.urls import url
 
 
 urlpatterns = [
@@ -34,6 +32,7 @@ urlpatterns = [
     path('company/list/', viewsCRUD.company_list, name='company_list'),  # get req. to retrieve and display all records
 
     path('products_table/', viewsCRUD.products_table, name="products_table"),
+    path('search-products', csrf_exempt(viewsCRUD.search_products), name="search_products"),
     path('create_product/', viewsCRUD.create_product, name="create_product"),
     path('update_product/<str:pk>', viewsCRUD.update_product, name="update_product"),
     path('delete_product/<str:pk>', viewsCRUD.delete_product, name="delete_product"),

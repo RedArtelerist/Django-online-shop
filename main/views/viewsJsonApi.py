@@ -10,9 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-
 # ------------------------------------   json API Products   ----------------------------------------------------------------------------------
-
 
 # @allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
@@ -27,14 +25,12 @@ def apiOverview(request):
     return Response(api_urls)
 
 
-
 # @allowed_users(allowed_roles=['admin'])
 @api_view(['GET'])
 def ProductList(request):
     products = Product.objects.all()
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
-
 
 
 # @allowed_users(allowed_roles=['admin'])

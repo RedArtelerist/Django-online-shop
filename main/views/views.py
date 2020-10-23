@@ -1,37 +1,9 @@
 from django.views.generic import ListView
-from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.utils.decorators import method_decorator
-from django.views import View
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import status
-
-from rest_framework.decorators import api_view
-from rest_framework.exceptions import MethodNotAllowed, APIException
-from rest_framework.response import Response
-import json
-import datetime
-from django.conf import settings
-from django.urls import reverse
-
-from ..decorators import unauthenticated_user, allowed_users
-
-from ..serializers import *
 from ..utils import *
 from ..forms import *
-
-from rest_framework.exceptions import APIException
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-
-
-
-from django.views.generic import TemplateView
 from django.shortcuts import render
-from django.http import HttpResponse
 
 
 # ------------------------------------   Pages   ----------------------------------------------------------------------------------
