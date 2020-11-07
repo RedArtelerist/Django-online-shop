@@ -74,4 +74,8 @@ urlpatterns = [
     path('charts', viewsCharts.renderCharts, name='charts'),
 
 
+    path('register', views.registerUser, name='register'),
+    path('login', views.loginUser, name='login'),
+    path('logout', views.logoutUser, name='logout'),
+
 ]

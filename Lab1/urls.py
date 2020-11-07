@@ -12,6 +12,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
+    path('accounts/', include('allauth.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('jsonApi', TemplateView.as_view(template_name='index.html'), name='jsonApi'),
     path('jsonApi/categories', TemplateView.as_view(template_name='index.html')),

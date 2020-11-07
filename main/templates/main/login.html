@@ -1,0 +1,78 @@
+{% load static %}
+{% load socialaccount %}
+{% providers_media_js %}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="keywords"
+        content="Flat lay login form Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+
+    <link href="//fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/login.css' %}" type="text/css" media="all" />
+
+
+    <script src="https://kit.fontawesome.com/af562a2a63.js" crossorigin="anonymous"></script>
+
+    <style>
+        #messages{
+			background-color: red;
+			color: #fff;
+			padding: 10px;
+			margin-top: 10px;
+		}
+    </style>
+
+</head>
+
+<body>
+    <section class="w3l-workinghny-form">
+        <!-- /form -->
+        <div class="workinghny-form-grid">
+            <div class="wrapper">
+                <div class="workinghny-block-grid">
+                    <div class="form-right-inf">
+                        <h2>Login </h2>
+                        <div class="social-media">
+                            <a href="{% provider_login_url "google" %}" class="go"><span class="fab fa-google" aria-hidden="true"></span> Login with google</a>
+                            <a href="#facebook" class="fb"><span class="fab fa-facebook" aria-hidden="true"></span> Login with facebok</a>
+                            <a href="#twitter" class="tw"><span class="fab fa-twitter" aria-hidden="true"></span> Login with twitter</a>
+                        </div>
+                        <div class="login-form-content">
+                            <h2>Login with username</h2>
+                            <form method="post" action="" class="login" id="login" name="login-form">
+                                {% csrf_token %}
+                                <div class="one-frm">
+                                    <input type="text" id="username" name="username" minlength="3" placeholder="Username" required="" autofocus>
+                                </div>
+                                <div class="one-frm">
+                                    <input type="password" id="password" name="password" placeholder="Password" minlength="3" required>
+                                </div>
+                                <label class="check-remaind">
+                                    <input type="checkbox">
+                                    <span class="checkmark"></span>
+                                    <p class="remember">Remember Me</p>
+
+                                </label>
+                                <button class="btn btn-style mt-3">Login </button>
+                                <p class="already">Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+                                <p class="already">Go to <a href="{% url 'home' %}">Home</a></p>
+
+                                {% for message in messages %}
+                                    <p id="messages">{{message}}</p>
+                                {% endfor %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</body>
+
+</html>
