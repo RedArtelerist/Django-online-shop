@@ -21,4 +21,9 @@
     <div class="container">
       <a href="{% url 'store' %}" class="btn my-btn">Go to Store</a>
     </div>
+    <div>
+        <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-user btn-block">
+          <i class = "fab fa-facebook-f fa-fw">Login with Facebook</i>
+        </a>
+    </div>
 {% endblock %}

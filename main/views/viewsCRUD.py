@@ -101,24 +101,6 @@ def company_delete(request, id):
 # ------------------------------------   CRUD for Product   ----------------------------------------------------------------------------------
 def search_products(request):
     if request.method == 'POST':
-        '''
-        image = models.ImageField(null=True, blank=True, upload_to='media', default='placeholder.png')
-        name = models.CharField('Name', max_length=50, null=True, unique=True, validators=[RegexValidator(
-            regex='^[a-zA-Z0-9/\s)(._-]*$',
-            message='Product name must be Alphabetic',
-            code='invalid_productname'
-        ), ])
-        description = models.TextField('Description', max_length=3000, blank=True, null=True)
-        shortSpecifications = models.TextField('Short specifications', max_length=500, null=True)
-        specifications = models.TextField('Specifications', max_length=3000, null=True)
-        price = models.DecimalField('Price', default=0, max_digits=10, decimal_places=2, validators=[validate_price])
-        discount = models.PositiveSmallIntegerField('Discount', default=0, null=True, validators=[validate_discount])
-        year = models.PositiveSmallIntegerField('Year', default=datetime.datetime.now().year,
-                                                validators=[validate_product_year])
-        digital = models.BooleanField(default=False, null=True, blank=False)
-        isActive = models.BooleanField(default=True)
-        category = models.ForeignKey(Category, verbose_name="Category", on_delete=models.CASCADE)
-        company = models.ForeignKey(Company, verbose_name="Company", on_delete=models.CASCADE)'''
 
         print(request)
         search_str = json.loads(request.body).get('searchText')

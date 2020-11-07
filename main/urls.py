@@ -6,6 +6,7 @@ from .views import viewsCRUD
 from .views import viewsJsonApi
 from .views import viewsMap
 from .views import viewsCharts
+from .views import viewsRegisterAndLogin
 
 
 
@@ -72,6 +73,12 @@ urlpatterns = [
 
     path('mapBox', viewsMap.renderMap, name='mapBox'),
     path('charts', viewsCharts.renderCharts, name='charts'),
+
+    #RegistrationAndAuthorization
+
+    path('register/', viewsRegisterAndLogin.registerPage, name='register'),
+    path('login/', viewsRegisterAndLogin.loginPage, name='login'),
+    path('logout/', viewsRegisterAndLogin.logoutUser, name='logout'),
 
 
 ]
