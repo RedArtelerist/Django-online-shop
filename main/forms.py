@@ -1,11 +1,11 @@
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
-from .models import *
 from django.contrib.auth.forms import UserCreationForm
+
+from .models import *
 
 
 class CategoryForm(forms.ModelForm):
-
     class Meta:
         model = Category
         fields = ('name',)
@@ -18,7 +18,6 @@ class CategoryForm(forms.ModelForm):
 
 
 class CompanyForm(forms.ModelForm):
-
     class Meta:
         model = Company
         fields = ('name', 'country')
@@ -70,10 +69,6 @@ class ReviewForm(forms.ModelForm):
 
 
 class CreateUserForm(UserCreationForm):
-
-    firstname = forms.CharField(max_length=100)
-    lastname = forms.CharField(max_length=100)
-
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'firstname', 'lastname']
+        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']

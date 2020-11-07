@@ -108,8 +108,6 @@ def search_products(request):
             .values("id", "image", "name", "price", "discount", "year", "shortSpecifications",
                     "isActive", "digital", "company__name", "category__name")
 
-        data = products.values()
-
         return JsonResponse(list(products), safe=False)
 
 

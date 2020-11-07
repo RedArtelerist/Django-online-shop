@@ -26,7 +26,7 @@ DEBUG = True
 #DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 
-ALLOWED_HOSTS = ['localhost:8000', '*']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -43,8 +43,16 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'main',
-    'social_django',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
+
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'
+#ACCOUNT_ADAPTER = 'main.models.MyAccountAdapter'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -58,8 +66,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'Lab1.urls'
@@ -77,20 +83,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
-
-AUTHENTICATION_BACKENDS = (
-    'social_core.backends.facebook.FacebookOAuth2',
-    'social_core.backends.twitter.TwitterOAuth',
-    'social_core.backends.github.GithubOAuth2',
-
-    'django.contrib.auth.backends.ModelBackend',
-)
 
 WSGI_APPLICATION = 'Lab1.wsgi.application'
 
@@ -103,6 +99,13 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -144,10 +147,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'django-react-frontend/build/static')]
-
-LOGIN_URL = 'login'
-LOGOUT_URL = 'logout'
-LOGIN_REDIRECT_URL = 'store'
 
 MEDIA_URL = '/media/'
 
@@ -224,6 +223,3 @@ CKEDITOR_CONFIGS = {
 CORS_ORIGIN_WHITELIS = [
     "http://localhost:3000"
 ]
-
-SOCIAL_AUTH_FACEBOOK_KEY = '363387208074058'  # App ID
-SOCIAL_AUTH_FACEBOOK_SECRET = '66710985fa52fd2d39eaf674afbee3a3'  # App Secret

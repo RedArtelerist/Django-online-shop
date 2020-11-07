@@ -1,3 +1,4 @@
+from allauth.account.adapter import DefaultAccountAdapter
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import *
@@ -13,7 +14,7 @@ import datetime
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    name = models.CharField('Name', max_length=100, null=True, unique=True, validators=[RegexValidator(
+    name = models.CharField('Name', max_length=100, null=True, validators=[RegexValidator(
         regex='^[a-zA-Z0-9\s_-]*$',
         message='User name must be Alphanumerical',
         code='invalid_username'

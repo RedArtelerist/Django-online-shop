@@ -54,11 +54,11 @@
             </div>
             <div>
                 <div style="color: orange; font-size: 2em" class="product-rating">
-                    <i class="fa fa-star{% if product.averegereview < 1 %}-o empty{% endif%}"></i>
-                    <i class="fa fa-star{% if product.averegereview < 2 %}-o empty{% endif%}"></i>
-                    <i class="fa fa-star{% if product.averegereview < 3 %}-o empty{% endif%}"></i>
-                    <i class="fa fa-star{% if product.averegereview < 4 %}-o empty{% endif%}"></i>
-                    <i class="fa fa-star{% if product.averegereview < 5 %}-o empty{% endif%}"></i>
+                    <i class="{% if product.averegereview < 1 %}far{% else %}fa{% endif %} fa-star"></i>
+                    <i class="{% if product.averegereview < 2 %}far{% else %}fa{% endif %} fa-star"></i>
+                    <i class="{% if product.averegereview < 3 %}far{% else %}fa{% endif %} fa-star"></i>
+                    <i class="{% if product.averegereview < 4 %}far{% else %}fa{% endif %} fa-star"></i>
+                    <i class="{% if product.averegereview < 5 %}far{% else %}fa{% endif %} fa-star"></i>
                     {{ product.averegereview |stringformat:".2f"}}
                 </div>
             </div>
