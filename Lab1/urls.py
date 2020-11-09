@@ -19,6 +19,7 @@ urlpatterns = [
     path('jsonApi/companies', TemplateView.as_view(template_name='index.html')),
     path('jsonApi/products', TemplateView.as_view(template_name='index.html')),
 
+    path('oauth/', include('social_django.urls', namespace='social')),
 
 ]
 

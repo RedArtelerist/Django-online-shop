@@ -11,6 +11,8 @@
     <meta name="keywords"
         content="Flat lay login form Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
     <link href="//fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{% static 'css/login.css' %}" type="text/css" media="all" />
@@ -52,19 +54,23 @@
                                 <div class="one-frm">
                                     <input type="password" id="password" name="password" placeholder="Password" minlength="3" required>
                                 </div>
+                                 {% for message in messages %}
+                                        <p  class="text-{{message.tags}}" style="margin-left: 15px;" >
+                                            {{message}}
+                                        </p>
+                                        <br>
+                                    {% endfor %}
                                 <label class="check-remaind">
                                     <input type="checkbox">
                                     <span class="checkmark"></span>
                                     <p class="remember">Remember Me</p>
 
                                 </label>
+
                                 <button class="btn btn-style mt-3">Login </button>
                                 <p class="already">Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
                                 <p class="already">Go to <a href="{% url 'home' %}">Home</a></p>
 
-                                {% for message in messages %}
-                                    <p id="messages">{{message}}</p>
-                                {% endfor %}
                             </form>
                         </div>
                     </div>

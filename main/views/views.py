@@ -6,6 +6,14 @@ from django.http import JsonResponse
 from ..utils import *
 from ..forms import *
 from django.shortcuts import render
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes,force_text, DjangoUnicodeDecodeError
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.views.generic import View
+
 
 
 # ------------------------------------   Pages   ----------------------------------------------------------------------------------
@@ -391,6 +399,7 @@ def registerUser(request):
         return redirect('home')
     else:
         form = CreateUserForm()
+        form.is_active = False
         if request.method == 'POST':
             form = CreateUserForm(request.POST)
             if form.is_valid():
@@ -400,9 +409,30 @@ def registerUser(request):
                 firstname = form.cleaned_data.get('first_name')
                 lastname = form.cleaned_data.get('last_name')
 
-                messages.success(request, 'Account was created for ' + username)
                 Customer.objects.create(user=user, email=email, name=firstname + " " + lastname)
-                return redirect('login')
+
+                current_site = request.META['HTTP_HOST']
+                print(current_site)
+                email_subject ='Activate your account'
+                message = render_to_string('main/auth/activate.html',
+                                           {
+                                               'user': user,
+                                               'domain': current_site,
+                                               'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                                               'token': generate_token.make_token(user)
+
+                                           })
+
+                email_message = EmailMessage(
+                    email_subject,
+                    message,
+                    settings.EMAIL_HOST_USER,
+                    [email],
+                )
+
+                email_message.send()
+
+                return redirect('verify_email')
 
         context = {'title': 'Register Account', 'form': form}
         for error in form.errors:
@@ -424,11 +454,34 @@ def loginUser(request):
                 login(request, user)
                 return redirect('home')
             else:
-                messages.info(request, 'Username OR password is incorrect')
+                messages.warning(request, 'Username OR password is incorrect')
 
         context = {}
         return render(request, 'main/login.html', context)
 
+
+class ActivateAccountView(View):
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except Exception as identifier:
+            user = None
+
+        if user is not None and generate_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            messages.add_message(request, messages.SUCCESS, 'Email was confirmed')
+            return redirect('login')
+        return render(request, 'main/auth/activate_failed.html', status=401)
+
+
+def verifyEmailPage(request):
+    context = {}
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    return render(request, 'main/auth/verify_email.html', context)
 
 def logoutUser(request):
     logout(request)
