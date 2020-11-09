@@ -223,3 +223,10 @@ CKEDITOR_CONFIGS = {
 CORS_ORIGIN_WHITELIS = [
     "http://localhost:3000"
 ]
+
+#добавить в .env 8минута
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST_USER='kingkong.youngstar@gmail.com'
+EMAIL_HOST_PASSWORD='7Vbj9yB70C'
+EMAIL_USE_TLS=True
+EMAIL_PORT=587
