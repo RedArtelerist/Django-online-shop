@@ -42,18 +42,29 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'rest_framework',
     'corsheaders',
-    'main',
+    'main.apps.MainConfig',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
 ]
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
-#ACCOUNT_ADAPTER = 'main.models.MyAccountAdapter'
 
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 

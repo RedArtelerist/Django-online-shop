@@ -2,6 +2,7 @@ import json
 from .models import *
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
+
 def cookieCart(request):
     try:
         cart = json.loads(request.COOKIES['cart'])
@@ -92,6 +93,7 @@ def guestData(request, data):
         )
 
     return customer, order
+
 
 class TokenGenerator(PasswordResetTokenGenerator):
     pass

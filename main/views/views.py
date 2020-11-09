@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes,force_text, DjangoUnicodeDecodeError
+from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.views.generic import View
@@ -404,12 +404,7 @@ def registerUser(request):
             form = CreateUserForm(request.POST)
             if form.is_valid():
                 user = form.save()
-                username = form.cleaned_data.get('username')
                 email = form.cleaned_data.get('email')
-                firstname = form.cleaned_data.get('first_name')
-                lastname = form.cleaned_data.get('last_name')
-
-                Customer.objects.create(user=user, email=email, name=firstname + " " + lastname)
 
                 current_site = request.META['HTTP_HOST']
                 print(current_site)
@@ -482,6 +477,7 @@ def verifyEmailPage(request):
         return redirect('home')
 
     return render(request, 'main/auth/verify_email.html', context)
+
 
 def logoutUser(request):
     logout(request)
