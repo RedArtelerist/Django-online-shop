@@ -28,8 +28,8 @@ class CompanyAdmin(admin.ModelAdmin):
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email')
-    readonly_fields = ('name', 'email')
+    list_display = ('name', 'user', 'email')
+    readonly_fields = ('name', 'user', 'email')
 
 
 class ImagesInline(admin.TabularInline):
@@ -179,4 +179,3 @@ class ReviewAdmin(admin.ModelAdmin):
         )
 
 
-admin.site.register(Post)

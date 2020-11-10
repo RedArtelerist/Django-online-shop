@@ -11,6 +11,16 @@ import datetime
 
 # Create your models here.
 
+User._meta.get_field('email')._unique = True
+User._meta.get_field('email').blank = False
+User._meta.get_field('email').null = False
+
+User._meta.get_field('first_name').blank = False
+User._meta.get_field('first_name').null = False
+
+User._meta.get_field('last_name').blank = False
+User._meta.get_field('last_name').null = False
+
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -288,10 +298,4 @@ class Review(models.Model):
         verbose_name_plural = "Reviews"
 
 
-class Post(models.Model):
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-    image = models.ImageField(default="placeholder.png", null=True, blank=True)
 
-    def __str__(self):
-        return self.title

@@ -63,6 +63,29 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {
             'access_type': 'online',
         }
+    },
+    'facebook': {
+        'METHOD': 'js_sdk',
+        'SCOPE': [
+            'public_profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'email',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'VERIFIED_EMAIL': True,
+        'VERSION': 'v7.0',
     }
 }
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -134,6 +157,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+    {'NAME': 'main.validations.NumberValidator'},
+    {'NAME': 'main.validations.LowercaseValidator', },
+
 ]
 
 # Internationalization
@@ -235,9 +261,8 @@ CORS_ORIGIN_WHITELIS = [
     "http://localhost:3000"
 ]
 
-#добавить в .env 8минута
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_HOST_USER='kingkong.youngstar@gmail.com'
-EMAIL_HOST_PASSWORD='7Vbj9yB70C'
-EMAIL_USE_TLS=True
-EMAIL_PORT=587
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'redartelerist.host02@gmail.com'
+EMAIL_HOST_PASSWORD = 'xoaf34839dajad'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587

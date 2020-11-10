@@ -2,7 +2,7 @@
 {% load socialaccount %}
 {% providers_media_js %}
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 
 <head>
     <title>{{ title }}</title>
@@ -42,7 +42,6 @@
                         <div class="social-media">
                             <a href="{% provider_login_url "google" %}" class="go"><span class="fab fa-google" aria-hidden="true"></span> Login with google</a>
                             <a href="{% provider_login_url "facebook" %}" class="fb"><span class="fab fa-facebook" aria-hidden="true"></span> Login with facebok</a>
-                            <a href="#twitter" class="tw"><span class="fab fa-twitter" aria-hidden="true"></span> Login with twitter</a>
                         </div>
                         <div class="login-form-content">
                             <h2>Login with username</h2>
@@ -55,17 +54,17 @@
                                     <input type="password" id="password" name="password" placeholder="Password" minlength="3" required>
                                 </div>
                                  {% for message in messages %}
-                                        <p  class="text-{{message.tags}}" style="margin-left: 15px;" >
-                                            {{message}}
-                                        </p>
-                                        <br>
-                                    {% endfor %}
-                                <label class="check-remaind">
+                                    <p  class="text-{{message.tags}}" style="margin-left: 15px;" >
+                                        {{message}}
+                                    </p>
+                                    <br>
+                                {% endfor %}
+                                <p><a href="{% url 'reset_password' %}">Forgot password</a></p>
+                                <!--<label class="check-remaind">
                                     <input type="checkbox">
                                     <span class="checkmark"></span>
                                     <p class="remember">Remember Me</p>
-
-                                </label>
+                                </label>-->
 
                                 <button class="btn btn-style mt-3">Login </button>
                                 <p class="already">Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>

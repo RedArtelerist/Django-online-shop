@@ -1,7 +1,8 @@
 from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import views as auth_views
 
-from .views import views
+from .views import views, viewsRegisterAndLogin
 from .views import viewsCRUD
 from .views import viewsJsonApi
 from .views import viewsMap
@@ -73,10 +74,26 @@ urlpatterns = [
     path('mapBox', viewsMap.renderMap, name='mapBox'),
     path('charts', viewsCharts.renderCharts, name='charts'),
 
-    path('register/', views.registerUser, name='register'),
-    path('login/', views.loginUser, name='login'),
-    path('logout/', views.logoutUser, name='logout'),
-    path('activate/<uidb64>/<token>', views.ActivateAccountView.as_view(), name='activate'),
-    path('verify-email/', views.verifyEmailPage, name='verify_email')
+    path('register/', viewsRegisterAndLogin.registerUser, name='register'),
+    path('login/', viewsRegisterAndLogin.loginUser, name='login'),
+    path('logout/', viewsRegisterAndLogin.logoutUser, name='logout'),
+    path('activate/<uidb64>/<token>', viewsRegisterAndLogin.ActivateAccountView.as_view(), name='activate'),
+    path('verify-email/', viewsRegisterAndLogin.verifyEmailPage, name='verify_email'),
 
+
+    path('reset_password/',
+     auth_views.PasswordResetView.as_view(template_name="main/password/password_reset.html"),
+     name="reset_password"),
+
+    path('reset_password_sent/',
+        auth_views.PasswordResetDoneView.as_view(template_name="main/password/password_reset_sent.html"),
+        name="password_reset_done"),
+
+    path('reset/<uidb64>/<token>/',
+     auth_views.PasswordResetConfirmView.as_view(template_name="main/password/password_reset_form.html"),
+     name="password_reset_confirm"),
+
+    path('reset_password_complete/',
+        auth_views.PasswordResetCompleteView.as_view(template_name="main/password/password_reset_done.html"),
+        name="password_reset_complete"),
 ]

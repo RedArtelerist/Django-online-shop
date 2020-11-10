@@ -44,11 +44,12 @@
                     <div style="color: #0f74a8"><i class="fa fa-clock-o"></i> {{ review.data_added}}</div>
 
                     <div class="review-rating">
-                        <i class="fa fa-star{% if review.rate < 1 %}-o empty{% endif %}"></i>
-                        <i class="fa fa-star{% if review.rate < 2 %}-o empty{% endif %}"></i>
-                        <i class="fa fa-star{% if review.rate < 3 %}-o empty{% endif %}"></i>
-                        <i class="fa fa-star{% if review.rate < 4 %}-o empty{% endif %}"></i>
-                        <i class="fa fa-star{% if review.rate < 5 %}-o empty{% endif %}"></i>
+                        <i class="{% if review.rate < 1 %}far{% else %}fa{% endif %} fa-star"></i>
+                        <i class="{% if review.rate < 2 %}far{% else %}fa{% endif %} fa-star"></i>
+                        <i class="{% if review.rate < 3 %}far{% else %}fa{% endif %} fa-star"></i>
+                        <i class="{% if review.rate < 4 %}far{% else %}fa{% endif %} fa-star"></i>
+                        <i class="{% if review.rate < 5 %}far{% else %}fa{% endif %} fa-star"></i>
+
                     </div>
                 </div>
                 <div class="review-body">
